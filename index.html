@@ -167,6 +167,25 @@
       .modal-overlay, .toast-container { display:none !important; }
     }
   </style>
+
+  <script>
+    // Service Worker — auto-update on every deploy
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('./sw.js').then(reg => {
+        reg.addEventListener('updatefound', () => {
+          const newWorker = reg.installing;
+          newWorker.addEventListener('statechange', () => {
+            if (newWorker.state === 'activated') {
+              // New version installed — reload to get fresh content
+              window.location.reload();
+            }
+          });
+        });
+        // Check for updates every time the page loads
+        reg.update();
+      });
+    }
+  </script>
 </head>
 <body data-id="0" class="min-h-screen flex flex-col">
   <app-icon data-id="1" hidden data-icon="wind" data-palette="Green"></app-icon>
