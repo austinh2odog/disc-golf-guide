@@ -332,7 +332,6 @@
         <div data-id="96" class="flex flex-row items-center justify-between gap-2 mb-3">
           <div data-id="97">
             <h2 data-id="98" class="text-lg md:text-xl font-bold text-ink-900">Disc Cards</h2>
-            <p data-id="99" id="cards-subtitle" class="text-xs text-ink-500 mt-0.5">18 in bag · 10 not in bag · RHBH</p>
           </div>
           <div class="flex items-center gap-1.5 no-print">
             <!-- Add Disc -->
@@ -1530,7 +1529,6 @@
       document.getElementById('filter-all-count').textContent = total;
       document.getElementById('filter-inbag-count').textContent = inBag;
       document.getElementById('bag-summary-text').textContent = inBag + ' in bag · ' + outBag + ' not in bag · 👤 ' + currentPlayer;
-      document.getElementById('cards-subtitle').textContent = inBag + ' in bag · ' + outBag + ' not in bag · ' + throwMode + ' · ' + currentPlayer;
       // Type counts — respect active bag filter
       var countSource = (cardFilter === 'inbag') ? getInBagDiscs() : discs;
       var countDriver = countSource.filter(function(d){ return d.type === 'Distance Driver'; }).length;
