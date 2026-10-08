@@ -1,0 +1,2574 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Disc Golf Wind & Shot Guide</title>
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-title" content="Disc Golf Guide" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <link id="apple-touch-icon" rel="apple-touch-icon" />
+  <link id="pwa-manifest" rel="manifest" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest" defer></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'] },
+          colors: {
+            forest: { 900:'#0f2218', 800:'#142b1f', 700:'#1a3c2e', 600:'#245a42', 500:'#2d6a4f', 400:'#40916c', 300:'#52b788', 200:'#74c69d', 100:'#b7e4c7' },
+            parchment: { 50:'#f8f5ef', 100:'#f0ead9', 200:'#e5dcc8', 300:'#d4c9ad' },
+            gold: { 600:'#8a6d12', 500:'#a07d15', 400:'#c9a227', 300:'#dbb94d', 200:'#e8d07a', 100:'#f5e9b3' },
+            ink: { 900:'#1a1a1a', 800:'#2d2d2d', 700:'#404040', 600:'#555555', 500:'#6b6b6b', 400:'#888888', 300:'#aaaaaa' },
+            navy: { 900:'#0a1628', 800:'#122240', 700:'#1e3a5f', 600:'#2a5080', 500:'#3668a0' },
+            rating: { excellent:'#2d6a4f', good:'#52b788', fair:'#e9c46a', avoid:'#e63946' },
+            disc: { putter:'#3b82f6', midrange:'#22c55e', fairway:'#f59e0b', distance:'#ef4444' }
+          }
+        }
+      }
+    };
+  </script>
+  <style>
+    * { box-sizing: border-box; }
+    body { font-family: 'Inter', system-ui, sans-serif; background: #f8f5ef; color: #1a1a1a; margin: 0; }
+    .tab-content { display: none; opacity: 0; transition: opacity 0.3s ease; }
+    .tab-content.active { display: block; opacity: 1; }
+    .tab-btn-nav { position: relative; padding-bottom: 0.5rem; }
+    .tab-btn-nav.active::after { content:''; position:absolute; bottom:0; left:0; right:0; height:3px; background:#c9a227; border-radius:2px; }
+    .wind-toggle-btn.active { background:#c9a227; color:#fff; }
+    .pill { display:inline-flex; align-items:center; gap:4px; padding:2px 10px; border-radius:9999px; font-size:0.7rem; font-weight:600; white-space:nowrap; }
+    .pill-excellent { background:rgba(45,106,79,0.12); color:#2d6a4f; }
+    .pill-good { background:rgba(82,183,136,0.15); color:#2d7a4f; }
+    .pill-fair { background:rgba(233,196,106,0.25); color:#8a6d12; }
+    .pill-avoid { background:rgba(230,57,70,0.12); color:#e63946; }
+    .stability-bar { height:8px; border-radius:4px; background:linear-gradient(to right, #3b82f6, #22c55e, #f59e0b, #ef4444, #991b1b); position:relative; }
+    .stability-marker { width:14px; height:14px; border-radius:50%; border:3px solid #1a1a1a; background:#fff; position:absolute; top:50%; transform:translate(-50%,-50%); }
+    .flow-node { border:2px solid #d4c9ad; border-radius:1rem; padding:1rem 1.25rem; background:#fff; cursor:pointer; transition:all 0.2s ease; position:relative; }
+    .flow-node:hover { border-color:#c9a227; box-shadow:0 2px 12px rgba(201,162,39,0.15); }
+    .flow-node.active-node { border-color:#c9a227; background:rgba(201,162,39,0.06); box-shadow:0 0 0 3px rgba(201,162,39,0.2); }
+    .flow-node.selected { border-color:#2d6a4f; background:rgba(45,106,79,0.06); }
+    .result-card { border:2px solid #2d6a4f; border-radius:1rem; padding:1.25rem; background:linear-gradient(135deg, rgba(45,106,79,0.04), rgba(201,162,39,0.04)); }
+    .breadcrumb-chip { display:inline-flex; align-items:center; gap:4px; padding:4px 12px; background:rgba(201,162,39,0.12); color:#8a6d12; border-radius:9999px; font-size:0.75rem; font-weight:500; }
+    .connector-line { width:2px; height:24px; background:#d4c9ad; margin:0 auto; }
+    .connector-arrow { width:0; height:0; border-left:6px solid transparent; border-right:6px solid transparent; border-top:8px solid #d4c9ad; margin:0 auto; }
+    .cheat-card { border-radius:1rem; padding:1.25rem; background:#fff; border:1px solid rgba(212,201,173,0.5); }
+    .type-badge { font-size:0.6rem; font-weight:600; padding:2px 8px; border-radius:9999px; text-transform:uppercase; letter-spacing:0.05em; }
+    .type-distance { background:rgba(239,68,68,0.1); color:#dc2626; }
+    .type-fairway { background:rgba(245,158,11,0.12); color:#b45309; }
+    .type-midrange { background:rgba(34,197,94,0.12); color:#16a34a; }
+    .type-putter { background:rgba(59,130,246,0.12); color:#2563eb; }
+    .flight-box { width:40px; height:40px; display:flex; align-items:center; justify-content:center; border-radius:0.5rem; font-weight:700; font-size:0.95rem; color:#fff; }
+    .disc-card { background:#fff; border-radius:1rem; border:1px solid rgba(212,201,173,0.4); overflow:hidden; transition:box-shadow 0.2s, opacity 0.4s ease, filter 0.4s ease, border-color 0.4s ease; position:relative; }
+    .disc-card:hover { box-shadow:0 4px 20px rgba(26,60,46,0.08); }
+    .disc-card.out-of-bag { opacity:0.45; filter:grayscale(60%); border:2px dashed #aaa; }
+    .disc-card.out-of-bag:hover { opacity:0.65; }
+    .not-in-bag-badge { position:absolute; top:12px; left:12px; background:rgba(100,100,100,0.15); color:#666; font-size:0.6rem; font-weight:700; padding:2px 8px; border-radius:9999px; text-transform:uppercase; letter-spacing:0.05em; z-index:5; }
+    .group-header-row td { background:rgba(26,60,46,0.06); font-weight:600; font-size:0.75rem; text-transform:uppercase; letter-spacing:0.08em; color:#1a3c2e; padding:8px 12px !important; }
+    .matrix-table th { position:sticky; top:0; z-index:2; background:#1a3c2e; color:#f8f5ef; }
+    .mode-badge { display:inline-flex; align-items:center; gap:4px; padding:3px 10px; border-radius:9999px; font-size:0.7rem; font-weight:600; }
+    .mode-badge-tr { background:rgba(59,130,246,0.12); color:#2563eb; }
+    .mode-badge-tl { background:rgba(45,106,79,0.12); color:#1a5c3a; }
+    .fh-suitability-badge { display:inline-flex; align-items:center; gap:3px; padding:2px 8px; border-radius:9999px; font-size:0.6rem; font-weight:600; }
+    .fh-badge-excellent { background:rgba(45,106,79,0.15); color:#1a5c3a; }
+    .fh-badge-good { background:rgba(45,106,79,0.12); color:#2d6a4f; }
+    .fh-badge-fair { background:rgba(233,196,106,0.25); color:#8a6d12; }
+    .fh-badge-avoid { background:rgba(230,57,70,0.12); color:#e63946; }
+    .fh-warning-banner { background:rgba(30,58,95,0.08); border:1px solid rgba(30,58,95,0.2); border-radius:0.75rem; padding:0.75rem 1rem; margin-bottom:0.5rem; }
+    .modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:100; display:flex; align-items:center; justify-content:center; padding:1rem; opacity:0; transition:opacity 0.25s ease; pointer-events:none; }
+    .modal-overlay.show { opacity:1; pointer-events:auto; }
+    .modal-card { background:#fff; border-radius:1rem; max-width:480px; width:100%; max-height:90vh; overflow-y:auto; box-shadow:0 20px 60px rgba(0,0,0,0.2); transform:translateY(20px); transition:transform 0.25s ease; }
+    .modal-overlay.show .modal-card { transform:translateY(0); }
+    .modal-header { background:#1a3c2e; color:#fff; padding:1rem 1.5rem; border-radius:1rem 1rem 0 0; }
+    .modal-body { padding:1.5rem; }
+    .modal-body label { display:block; font-size:0.75rem; font-weight:600; color:#404040; margin-bottom:0.25rem; }
+    .modal-body label .req { color:#e63946; }
+    .modal-body input, .modal-body select, .modal-body textarea { width:100%; padding:0.5rem 0.75rem; border:1.5px solid #e5dcc8; border-radius:0.5rem; font-size:0.875rem; transition:border-color 0.2s, box-shadow 0.2s; background:#fff; }
+    .modal-body input:focus, .modal-body select:focus, .modal-body textarea:focus { outline:none; border-color:#c9a227; box-shadow:0 0 0 3px rgba(201,162,39,0.2); }
+    .modal-body textarea { resize:vertical; min-height:60px; }
+    .toast-container { position:fixed; bottom:1.5rem; left:50%; transform:translateX(-50%); z-index:200; display:flex; flex-direction:column; gap:0.5rem; align-items:center; pointer-events:none; }
+    .toast { padding:0.75rem 1.25rem; border-radius:0.75rem; font-size:0.8rem; font-weight:600; color:#fff; box-shadow:0 4px 20px rgba(0,0,0,0.15); pointer-events:auto; opacity:0; transform:translateY(20px); transition:all 0.3s ease; white-space:nowrap; }
+    .toast.show { opacity:1; transform:translateY(0); }
+    .toast-success { background:#2d6a4f; }
+    .toast-info { background:#2563eb; }
+    .toast-warning { background:#b45309; }
+    .remove-confirm { background:rgba(230,57,70,0.06); border:1px solid rgba(230,57,70,0.2); border-radius:0.75rem; padding:0.75rem; margin-top:0.5rem; }
+    .drop-zone { border:2px dashed #d4c9ad; border-radius:0.75rem; padding:2rem; text-align:center; cursor:pointer; transition:all 0.2s; }
+    .drop-zone.dragover { border-color:#c9a227; background:rgba(201,162,39,0.06); }
+    /* Toolbar buttons — compact icon+label */
+    .toolbar-icon-btn { display:inline-flex; align-items:center; justify-content:center; width:34px; height:34px; border-radius:50%; cursor:pointer; transition:all 0.18s ease; border:none; flex-shrink:0; }
+    /* Filter pills — same size as Hand/Style toggles */
+    .filter-pill-btn { padding:4px 12px; border-radius:9999px; font-size:0.75rem; font-weight:600; cursor:pointer; transition:all 0.25s ease; border:1.5px solid #d4c9ad; background:#fff; color:#555; }
+    .filter-pill-btn.active-filter { background:#1a3c2e; color:#fff; border-color:#1a3c2e; }
+
+    /* Hand/Style toggle buttons */
+    .hs-toggle-btn { padding:4px 14px; border-radius:9999px; font-size:0.75rem; font-weight:600; cursor:pointer; transition:all 0.25s ease; border:1.5px solid #1a3c2e; background:#fff; color:#1a3c2e; }
+    .hs-toggle-btn.hs-active { background:#1a3c2e; color:#fff; border-color:#1a3c2e; }
+    @media (max-width:640px) { .hs-toggle-btn { padding:3px 10px; font-size:0.72rem; } }
+
+    /* Add-to-bag circular button with tooltip */
+    .add-bag-circle { position:relative; width:28px; height:28px; border-radius:50%; background:#2d6a4f; color:#fff; font-size:18px; font-weight:700; border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:background 0.2s; flex-shrink:0; }
+    .add-bag-circle:hover { background:#1a3c2e; }
+    .add-bag-circle::after { content:'Add to bag'; position:absolute; bottom:calc(100% + 8px); left:50%; transform:translateX(-50%); background:#1a1a1a; color:#fff; font-size:11px; font-weight:500; padding:4px 8px; border-radius:4px; white-space:nowrap; opacity:0; pointer-events:none; transition:opacity 0.2s; z-index:10; }
+    .add-bag-circle::before { content:''; position:absolute; bottom:calc(100% + 2px); left:50%; transform:translateX(-50%); border-left:5px solid transparent; border-right:5px solid transparent; border-top:5px solid #1a1a1a; opacity:0; pointer-events:none; transition:opacity 0.2s; z-index:10; }
+    .add-bag-circle:hover::after, .add-bag-circle:hover::before { opacity:1; }
+
+    /* Datalist inputs */
+    input[list] { cursor: text; }
+    input[list]::-webkit-calendar-picker-indicator { opacity: 0.5; cursor: pointer; }
+
+    /* Type filter dropdown */
+    #type-filter-dropdown label:hover { background: rgba(248,245,239,0.8); }
+    #type-filter-btn.active-filter { background:#1a3c2e; color:#fff; border-color:#1a3c2e; }
+
+    /* Disc image upload - circular */
+    .disc-img-placeholder:hover { border-color:#a07d15; background:#f5e9b3; }
+    .disc-tile-img { width:52px; height:52px; object-fit:cover; border-radius:50%; border:2px solid #e5dcc8; flex-shrink:0; }
+    .disc-img-placeholder { width:52px; height:52px; border-radius:50%; border:2px dashed #d4c9ad; background:#f8f5ef; display:flex; align-items:center; justify-content:center; color:#aaa; font-size:1.4rem; cursor:pointer; flex-shrink:0; }
+    .disc-img-preview { width:64px; height:64px; object-fit:cover; border-radius:50%; border:2px solid #e5dcc8; }
+
+    /* ---- In-app circular camera ---- */
+    #modal-circular-camera { background: #000; }
+    .camera-viewport { position: relative; width: 100%; max-width: 380px; aspect-ratio: 1; overflow: hidden; }
+    #camera-video { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .camera-circle-overlay {
+      position: absolute; inset: 0; pointer-events: none;
+      /* Circle fills 100% of viewport — matches canvas capture exactly */
+      background: radial-gradient(circle at 50% 50%, transparent 49%, rgba(0,0,0,0.86) 50%);
+    }
+    .camera-circle-ring {
+      position: absolute; inset: 0; pointer-events: none;
+      border-radius: 50%;
+      /* Gold ring sits right on the capture boundary */
+      box-shadow: 0 0 0 3px rgba(201,162,39,0.95), 0 0 0 4px rgba(255,255,255,0.12);
+    }
+    .shutter-btn {
+      width: 72px; height: 72px; border-radius: 50%;
+      background: #fff; border: 4px solid rgba(255,255,255,0.4);
+      box-shadow: 0 0 0 3px rgba(255,255,255,0.2);
+      cursor: pointer; transition: transform 0.1s ease, background 0.1s ease;
+      flex-shrink: 0;
+    }
+    .shutter-btn:active { transform: scale(0.92); background: #e0e0e0; }
+
+    @media print {
+      .no-print, nav, header, .tab-bar, footer, .throw-toggle-bar { display:none !important; }
+      .tab-content { display:block !important; opacity:1 !important; }
+      #tab-cards { display:block !important; }
+      #tab-wind, #tab-advisor { display:none !important; }
+      .disc-card { break-inside:avoid; page-break-inside:avoid; border:1px solid #ccc; box-shadow:none !important; }
+      .disc-card.out-of-bag { display:none !important; }
+      .cards-grid { grid-template-columns:repeat(2,1fr) !important; gap:12px !important; }
+      body { background:#fff !important; }
+      @page { margin:0.5in; size:letter; }
+      .modal-overlay, .toast-container { display:none !important; }
+    }
+  </style>
+</head>
+<body data-id="0" class="min-h-screen flex flex-col">
+  <app-icon data-id="1" hidden data-icon="wind" data-palette="Green"></app-icon>
+
+  <header data-id="2" class="bg-forest-700 text-white px-4 md:px-6 py-4">
+    <div data-id="3" class="max-w-7xl mx-auto flex items-center justify-between">
+      <div data-id="4">
+        <h1 data-id="5" class="text-xl md:text-2xl font-bold tracking-tight flex items-center gap-2">
+          <span data-id="6">🥏</span> Disc Golf Guide
+        </h1>
+        <p data-id="7" class="text-xs md:text-sm text-forest-100 mt-0.5">Wind · Shots · Reference</p>
+      </div>
+      <div class="flex items-center gap-3">
+        <div class="hidden md:flex items-center gap-2">
+          <span class="text-xs font-semibold text-forest-100">Player:</span>
+          <select id="player-select-desktop" style="background:rgba(255,255,255,0.12); color:#fff; font-size:0.78rem; font-weight:600; border-radius:0.5rem; padding:4px 12px; border:1px solid rgba(255,255,255,0.3); outline:none; cursor:pointer;"></select>
+        </div>
+        <button data-id="8" id="mobile-menu-btn" class="md:hidden p-2 rounded-lg hover:bg-forest-600">
+          <i data-id="9" data-lucide="menu" class="w-6 h-6"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <nav data-id="10" class="tab-bar bg-white border-b border-parchment-200 sticky top-0 z-30">
+    <div data-id="11" class="max-w-7xl mx-auto px-4 md:px-6">
+      <div data-id="12" class="hidden md:flex gap-8" id="desktop-tabs">
+        <button data-id="13" class="tab-btn-nav active py-3 text-sm font-medium text-ink-900" data-tab="wind">
+          <span data-id="14" class="flex items-center gap-2"><i data-id="15" data-lucide="wind" class="w-4 h-4"></i> Wind Matrix</span>
+        </button>
+        <button data-id="16" class="tab-btn-nav py-3 text-sm font-medium text-ink-500" data-tab="advisor">
+          <span data-id="17" class="flex items-center gap-2"><i data-id="18" data-lucide="git-branch" class="w-4 h-4"></i> Shot Advisor</span>
+        </button>
+        <button data-id="19" class="tab-btn-nav py-3 text-sm font-medium text-ink-500" data-tab="cards">
+          <span data-id="20" class="flex items-center gap-2"><i data-id="21" data-lucide="layers" class="w-4 h-4"></i> Disc Cards</span>
+        </button>
+      </div>
+      <div data-id="22" class="flex md:hidden gap-1 py-1" id="mobile-tabs">
+        <button data-id="23" class="tab-btn-nav active flex-1 py-2.5 text-xs font-medium text-ink-900 text-center" data-tab="wind">Wind Matrix</button>
+        <button data-id="24" class="tab-btn-nav flex-1 py-2.5 text-xs font-medium text-ink-500 text-center" data-tab="advisor">Shot Advisor</button>
+        <button data-id="25" class="tab-btn-nav flex-1 py-2.5 text-xs font-medium text-ink-500 text-center" data-tab="cards">Disc Cards</button>
+      </div>
+    </div>
+  </nav>
+
+
+
+
+  <!-- HAND + STYLE TOGGLE BAR -->
+  <div data-id="26" id="throw-toggle-bar" class="throw-toggle-bar border-b border-parchment-200 no-print" style="background:linear-gradient(135deg, rgba(26,60,46,0.06), rgba(45,106,79,0.04));">
+    <div data-id="27" class="max-w-7xl mx-auto px-4 md:px-6 py-1.5">
+      <div class="flex items-center gap-2 flex-wrap">
+        <div class="flex flex-row items-center gap-3 flex-wrap">
+          <div data-id="30" class="flex items-center gap-2">
+            <span data-id="31" class="text-xs font-semibold text-ink-500 w-14 text-right">Hand:</span>
+            <div data-id="32" class="flex gap-2" id="hand-toggle">
+              <button data-id="33" id="btn-right" class="hs-toggle-btn hs-active">Right</button>
+              <button data-id="34" id="btn-left" class="hs-toggle-btn">Left</button>
+            </div>
+          </div>
+          <div data-id="35" class="flex items-center gap-2">
+            <span data-id="36" class="text-xs font-semibold text-ink-500 w-14 text-right">Style:</span>
+            <div data-id="37" class="flex gap-2" id="style-toggle">
+              <button data-id="38" id="btn-backhand" class="hs-toggle-btn hs-active">Backhand</button>
+              <button data-id="39" id="btn-forehand" class="hs-toggle-btn">Forehand</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="mt-2">
+        <span id="wind-matrix-badge" class="mode-badge mode-badge-tr">→ Turn-Right Fade Left (RHBH / LHFH)</span>
+      </div>
+    </div>
+  </div>
+
+  <nav data-id="41" id="mobile-menu" class="hidden fixed inset-0 bg-white z-50 flex flex-col p-6">
+    <button data-id="42" id="mobile-menu-close" class="self-end p-2 mb-4">
+      <i data-id="43" data-lucide="x" class="w-6 h-6"></i>
+    </button>
+    <button data-id="44" class="mobile-nav-btn text-left py-4 text-lg font-medium border-b border-parchment-200" data-tab="wind">🌬️ Wind Matrix</button>
+    <button data-id="45" class="mobile-nav-btn text-left py-4 text-lg font-medium border-b border-parchment-200" data-tab="advisor">🌿 Shot Advisor</button>
+    <button data-id="46" class="mobile-nav-btn text-left py-4 text-lg font-medium border-b border-parchment-200" data-tab="cards">🥏 Disc Cards</button>
+    <div class="mt-6 pt-4 border-t border-parchment-200">
+      <div class="flex flex-col gap-2">
+        <span class="text-xs font-semibold text-ink-500 uppercase tracking-wider">Player Profile</span>
+        <select id="player-select" class="w-full py-2 px-3 rounded-lg border border-parchment-300 bg-white text-ink-900 text-sm font-semibold focus:outline-none focus:border-forest-500"></select>
+        <span class="text-[0.65rem] text-ink-400">Each player has their own disc bag stored locally</span>
+      </div>
+    </div>
+  </nav>
+
+  <main data-id="47" class="flex-1">
+    <!-- TAB 1: WIND MATRIX -->
+    <div data-id="48" id="tab-wind" class="tab-content active">
+      <div data-id="49" class="max-w-7xl mx-auto px-4 md:px-6 py-6">
+        <div data-id="50" class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+          <div data-id="51">
+            <h2 data-id="52" class="text-lg md:text-xl font-bold text-ink-900">Wind Suitability Matrix</h2>
+            <p data-id="53" id="wind-matrix-subtitle" class="text-xs text-ink-500 mt-0.5">RHBH perspective · Select wind strength below</p>
+          </div>
+          <div data-id="55" class="flex bg-parchment-100 rounded-full p-1 gap-1" id="wind-toggle">
+            <button data-id="56" class="wind-toggle-btn active px-4 py-1.5 rounded-full text-xs font-semibold transition-all" data-strength="light">Light 5–10</button>
+            <button data-id="57" class="wind-toggle-btn px-4 py-1.5 rounded-full text-xs font-semibold transition-all text-ink-600" data-strength="moderate">Mod 10–15</button>
+            <button data-id="58" class="wind-toggle-btn px-4 py-1.5 rounded-full text-xs font-semibold transition-all text-ink-600" data-strength="strong">Strong 15+</button>
+          </div>
+        </div>
+        <div class="flex flex-wrap gap-3 mb-4 text-xs">
+          <span class="pill pill-excellent">✅ Excellent</span>
+          <span class="pill pill-good">👍 Good</span>
+          <span class="pill pill-fair">⚠️ Fair</span>
+          <span class="pill pill-avoid">❌ Avoid</span>
+        </div>
+        <div data-id="64" class="overflow-x-auto rounded-xl border border-parchment-200 bg-white">
+          <table data-id="65" class="matrix-table w-full text-xs" id="wind-matrix-table">
+            <thead>
+              <tr>
+                <th class="text-left px-3 py-3 font-semibold text-xs min-w-[140px]">Disc</th>
+                <th class="text-center px-2 py-3 font-semibold text-xs">Head</th>
+                <th class="text-center px-2 py-3 font-semibold text-xs">Tail</th>
+                <th id="th-crossLR" class="text-center px-2 py-3 font-semibold text-xs"></th>
+                <th id="th-crossRL" class="text-center px-2 py-3 font-semibold text-xs"></th>
+
+              </tr>
+            </thead>
+            <tbody data-id="75" id="wind-matrix-body"></tbody>
+          </table>
+        </div>
+        <h3 data-id="76" class="text-base font-bold text-ink-900 mt-8 mb-4 flex items-center gap-2">
+          <i data-id="77" data-lucide="zap" class="w-4 h-4 text-gold-400"></i> Wind Cheat Sheet
+        </h3>
+        <div data-id="78" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4" id="cheat-sheet"></div>
+
+        
+      </div>
+    </div>
+
+    <!-- TAB 2: SHOT ADVISOR -->
+    <div data-id="79" id="tab-advisor" class="tab-content">
+      <div data-id="80" class="max-w-3xl mx-auto px-4 md:px-6 py-6">
+        <div data-id="81" class="flex items-center justify-between mb-4">
+          <div data-id="82">
+            <h2 data-id="83" class="text-lg md:text-xl font-bold text-ink-900">Shot Advisor</h2>
+            <p data-id="84" id="advisor-subtitle" class="text-xs text-ink-500 mt-0.5">Click through the decision tree to find your disc (RHBH)</p>
+          </div>
+          <button data-id="85" id="advisor-reset" class="flex items-center gap-1.5 px-4 py-2 bg-forest-700 text-white rounded-lg text-xs font-semibold hover:bg-forest-600 transition-colors">
+            <i data-id="86" data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i> Reset
+          </button>
+        </div>
+        <div data-id="87" id="advisor-mode-banner" class="fh-warning-banner mb-2">
+          <p data-id="88" class="text-xs font-medium text-ink-700 flex items-center gap-2" id="advisor-mode-text">➡️ Turn-Right Mode — disc naturally turns right, fades left</p>
+        </div>
+        <div data-id="89" id="fh-advisor-banner" class="fh-warning-banner hidden">
+          <p data-id="90" class="text-xs font-medium text-navy-700 flex items-center gap-2">⚠️ <span data-id="91">Forehand: Understable discs de-prioritized — forehand spin adds overstability</span></p>
+        </div>
+        <div data-id="92" id="breadcrumb-trail" class="flex flex-wrap gap-2 mb-6 min-h-[28px]"></div>
+        <div data-id="93" id="decision-tree" class="flex flex-col items-center"></div>
+      </div>
+    </div>
+
+    <!-- TAB 3: DISC CARDS -->
+    <div data-id="94" id="tab-cards" class="tab-content">
+      <div data-id="95" class="max-w-7xl mx-auto px-4 md:px-6 py-6">
+        <div data-id="96" class="flex flex-row items-center justify-between gap-2 mb-3">
+          <div data-id="97">
+            <h2 data-id="98" class="text-lg md:text-xl font-bold text-ink-900">Disc Cards</h2>
+            <p data-id="99" id="cards-subtitle" class="text-xs text-ink-500 mt-0.5">18 in bag · 10 not in bag · RHBH</p>
+          </div>
+          <div class="flex items-center gap-1.5 no-print">
+            <!-- Add Disc -->
+            <button id="btn-add-disc" title="Add Disc" class="toolbar-icon-btn bg-forest-700 text-white hover:bg-forest-600">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            </button>
+            <!-- Import CSV -->
+            <button id="btn-import-csv" title="Import discs from CSV" class="toolbar-icon-btn bg-forest-700 text-white hover:bg-forest-600">
+              <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+            </button>
+            <!-- Template -->
+            <button id="btn-download-csv-template" title="Download blank CSV template" class="toolbar-icon-btn bg-parchment-200 text-ink-600 hover:bg-parchment-300">
+              <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            </button>
+            <!-- Backup -->
+            <button id="btn-export-bag" title="Backup disc bag to file" class="toolbar-icon-btn bg-parchment-200 text-ink-600 hover:bg-parchment-300">
+              <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+            </button>
+            <input type="file" id="import-bag-input" accept=".json" class="hidden" />
+            <!-- Print -->
+            <button id="print-cards" title="Print disc cards" class="toolbar-icon-btn bg-gold-400 text-white hover:bg-gold-500">
+              <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+            </button>
+          </div>
+        </div>
+        <div class="flex flex-wrap items-center gap-3 mb-2 no-print" id="card-filter-bar">
+          <div class="flex flex-wrap gap-2 items-center">
+            <button id="filter-all" class="filter-pill-btn active-filter">All (<span id="filter-all-count">28</span>)</button>
+            <button id="filter-inbag" class="filter-pill-btn">In Bag (<span id="filter-inbag-count">18</span>)</button>
+            <!-- Type Filter Hamburger -->
+            <div class="relative" id="type-filter-wrapper">
+              <button id="type-filter-btn" class="filter-pill-btn flex items-center gap-1.5" title="Filter by disc type">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="6" y1="12" x2="18" y2="12"/><line x1="9" y1="18" x2="15" y2="18"/></svg>
+                <span id="type-filter-label">Types</span>
+              </button>
+              <div id="type-filter-dropdown" class="hidden absolute left-0 top-full mt-1 bg-white border border-parchment-200 rounded-xl shadow-lg z-50 min-w-[180px] p-3" style="box-shadow:0 8px 32px rgba(0,0,0,0.13);">
+                <div class="text-[0.65rem] font-semibold text-ink-400 uppercase tracking-wider mb-2">Filter by Type</div>
+                <label class="flex items-center gap-2 py-1.5 cursor-pointer hover:bg-parchment-50 rounded px-1">
+                  <input type="checkbox" id="chk-driver" class="accent-forest-700 w-3.5 h-3.5" value="Distance Driver" />
+                  <span class="text-xs font-medium text-ink-700">Drivers (<span id="filter-count-driver">0</span>)</span>
+                </label>
+                <label class="flex items-center gap-2 py-1.5 cursor-pointer hover:bg-parchment-50 rounded px-1">
+                  <input type="checkbox" id="chk-fairway" class="accent-forest-700 w-3.5 h-3.5" value="Fairway Driver" />
+                  <span class="text-xs font-medium text-ink-700">Fairway (<span id="filter-count-fairway">0</span>)</span>
+                </label>
+                <label class="flex items-center gap-2 py-1.5 cursor-pointer hover:bg-parchment-50 rounded px-1">
+                  <input type="checkbox" id="chk-midrange" class="accent-forest-700 w-3.5 h-3.5" value="Midrange" />
+                  <span class="text-xs font-medium text-ink-700">Midrange (<span id="filter-count-midrange">0</span>)</span>
+                </label>
+                <label class="flex items-center gap-2 py-1.5 cursor-pointer hover:bg-parchment-50 rounded px-1">
+                  <input type="checkbox" id="chk-putter" class="accent-forest-700 w-3.5 h-3.5" value="Putter" />
+                  <span class="text-xs font-medium text-ink-700">Putters (<span id="filter-count-putter">0</span>)</span>
+                </label>
+                <div class="border-t border-parchment-200 mt-2 pt-2">
+                  <button id="type-filter-clear" class="text-[0.7rem] font-semibold text-forest-600 hover:text-forest-800 transition-colors">Clear All</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <span id="bag-summary-text" class="text-xs text-ink-500 font-medium">18 in bag · 10 not in bag</span>
+        </div>
+
+        <div data-id="114" class="cards-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5" id="disc-cards-grid"></div>
+        <div data-id="115" class="text-center mt-8 no-print">
+          <button data-id="116" id="btn-reset-bag" class="text-xs text-ink-400 hover:text-ink-600 underline transition-colors">↺ Reset to Default Bag</button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer data-id="117" class="py-6 mt-auto text-center border-t border-parchment-200 no-print">
+    <p data-id="118" class="text-xs text-ink-400"><span data-id="119" id="footer-mode-label">RHBH</span> Reference · Updated for current bag</p>
+    <p data-id="120" class="text-xs text-ink-300 mt-1">Made by Copilot</p>
+  </footer>
+
+  <!-- Add Disc Modal -->
+  <div data-id="121" id="modal-add-disc" class="modal-overlay">
+    <div data-id="122" class="modal-card">
+      <div data-id="123" class="modal-header">
+        <h3 data-id="124" class="font-bold text-base">Add Disc to Bag</h3>
+      </div>
+      <div data-id="125" class="modal-body">
+        <div data-id="126" class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div data-id="127"><label data-id="128">Disc Name <span data-id="129" class="req">*</span></label><input data-id="130" type="text" id="add-name" placeholder="e.g. Wraith" /></div>
+          <div><label>Manufacturer <span class="req">*</span></label>
+            <input type="text" id="add-brand" placeholder="e.g. Innova" list="mfr-list-add" autocomplete="off" />
+            <datalist id="mfr-list-add"></datalist>
+          </div>
+          <div><label>Plastic</label>
+            <input type="text" id="add-plastic" placeholder="Select manufacturer first" list="plastic-list-add" autocomplete="off" />
+            <datalist id="plastic-list-add"></datalist>
+          </div>
+          <div data-id="138"><label data-id="139">Type <span data-id="140" class="req">*</span></label>
+            <select data-id="141" id="add-type">
+              <option data-id="142" value="Distance Driver">Distance Driver</option>
+              <option data-id="143" value="Fairway Driver">Fairway Driver</option>
+              <option data-id="144" value="Midrange">Midrange</option>
+              <option data-id="145" value="Putter">Putter</option>
+            </select>
+          </div>
+          <div data-id="146"><label data-id="147">Weight (g)</label><input data-id="148" type="number" id="add-weight" min="100" max="200" value="170" /></div>
+          <div class="sm:col-span-2">
+            <label>Disc Photo <span class="text-[0.65rem] text-ink-400 font-normal">(optional — camera or upload)</span></label>
+            <div class="flex items-center gap-3 mt-1">
+              <div id="add-img-placeholder" class="disc-img-placeholder" onclick="openCircularCamera('add')" title="Tap to open circular camera">📷</div>
+              <img id="add-img-preview" class="disc-img-preview hidden" src="" alt="Disc preview" />
+              <input type="file" id="add-img-input" accept="image/*" class="hidden" />
+              <div class="flex flex-col gap-1.5">
+                <button type="button" onclick="openCircularCamera('add')" class="px-3 py-1.5 bg-forest-700 text-white rounded-lg text-xs font-semibold hover:bg-forest-600 transition-colors flex items-center gap-1.5">📷 Camera</button>
+                <button type="button" onclick="document.getElementById('add-img-input').click()" class="px-3 py-1.5 bg-parchment-200 text-ink-700 rounded-lg text-xs font-semibold hover:bg-parchment-300 transition-colors flex items-center gap-1.5">🖼️ Library</button>
+                <button type="button" id="add-img-clear" class="px-3 py-1.5 bg-parchment-200 text-ink-700 rounded-lg text-xs font-semibold hover:bg-parchment-300 transition-colors hidden">✕ Remove Photo</button>
+              </div>
+              <input type="hidden" id="add-img-data" value="" />
+              <input type="hidden" id="add-icon" value="🥏" />
+            </div>
+          </div>
+          <div data-id="152"><label data-id="153">Speed <span data-id="154" class="req">*</span></label><input data-id="155" type="number" id="add-speed" min="1" max="14" step="0.5" placeholder="1–14" /></div>
+          <div data-id="156"><label data-id="157">Glide <span data-id="158" class="req">*</span></label><input data-id="159" type="number" id="add-glide" min="1" max="7" step="0.5" placeholder="1–7" /></div>
+          <div data-id="160"><label data-id="161">Turn <span data-id="162" class="req">*</span></label><input data-id="163" type="number" id="add-turn" min="-5" max="1" step="0.5" placeholder="-5 to 1" /></div>
+          <div data-id="164"><label data-id="165">Fade <span data-id="166" class="req">*</span></label><input data-id="167" type="number" id="add-fade" min="0" max="5" step="0.5" placeholder="0–5" /></div>
+        </div>
+        <div data-id="168" class="mt-3">
+          <label data-id="169">Notes (optional)</label>
+          <textarea data-id="170" id="add-notes" placeholder="Any personal notes about this disc..."></textarea>
+        </div>
+        <div data-id="171" class="mt-3 flex items-center gap-3">
+          <label data-id="172" class="flex items-center gap-2 cursor-pointer mb-0">
+            <input data-id="173" type="checkbox" id="add-inbag" checked class="accent-forest-700 w-4 h-4" />
+            <span data-id="174" class="text-xs font-semibold text-ink-700">Start in bag?</span>
+          </label>
+          <span data-id="175" class="text-[0.65rem] text-ink-400">Unchecked = saved but grayed out</span>
+        </div>
+        <div data-id="176" class="flex gap-2 mt-4">
+          <button data-id="177" id="add-disc-submit" class="flex-1 py-2.5 bg-forest-700 text-white rounded-lg text-sm font-semibold hover:bg-forest-600 transition-colors">Add to Bag</button>
+          <button data-id="178" id="add-disc-cancel" class="flex-1 py-2.5 bg-parchment-200 text-ink-700 rounded-lg text-sm font-semibold hover:bg-parchment-300 transition-colors">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Import CSV Modal -->
+  <div data-id="179" id="modal-import-csv" class="modal-overlay">
+    <div data-id="180" class="modal-card">
+      <div data-id="181" class="modal-header"><h3 data-id="182" class="font-bold text-base">Import Discs from CSV</h3></div>
+      <div data-id="183" class="modal-body">
+        <div data-id="184" id="csv-drop-zone" class="drop-zone mb-3">
+          <div data-id="185" class="text-2xl mb-2">📂</div>
+          <p data-id="186" class="text-sm font-medium text-ink-700">Drag & drop a CSV file here</p>
+          <p data-id="187" class="text-xs text-ink-400 mt-1">or click to browse</p>
+          <input data-id="188" type="file" id="csv-file-input" accept=".csv" class="hidden" />
+        </div>
+        <p data-id="189" id="csv-file-name" class="text-xs text-ink-500 mb-3 hidden"></p>
+        <div data-id="190" class="bg-parchment-50 rounded-lg p-3 border border-parchment-100 mb-3">
+          <p class="text-[0.65rem] text-ink-600 leading-relaxed">Your CSV should have columns: <strong>name, manufacturer, plastic, type, speed, glide, turn, fade, weight, inbag</strong>. All rows are imported. <code class="bg-parchment-200 px-1 rounded">inbag=Yes</code> marks active, otherwise grayed out.</p>
+          <button id="btn-modal-csv-template" class="mt-2 flex items-center gap-1.5 px-3 py-1.5 bg-parchment-200 text-ink-700 rounded-lg text-xs font-semibold hover:bg-parchment-300 transition-colors">
+            <i data-lucide="download" class="w-3 h-3"></i> Download Template
+          </button>
+        </div>
+        <div data-id="194" class="flex gap-4 mb-4">
+          <label data-id="195" class="flex items-center gap-2 cursor-pointer">
+            <input data-id="196" type="radio" name="import-mode" value="replace" checked class="accent-forest-700" />
+            <span data-id="197" class="text-xs font-medium text-ink-700">Replace bag</span>
+          </label>
+          <label data-id="198" class="flex items-center gap-2 cursor-pointer">
+            <input data-id="199" type="radio" name="import-mode" value="merge" class="accent-forest-700" />
+            <span data-id="200" class="text-xs font-medium text-ink-700">Merge (add new only)</span>
+          </label>
+        </div>
+        <p data-id="201" id="csv-preview-count" class="text-xs font-semibold text-forest-700 mb-3 hidden"></p>
+        <div data-id="202" class="flex gap-2">
+          <button data-id="203" id="csv-import-submit" class="flex-1 py-2.5 bg-forest-700 text-white rounded-lg text-sm font-semibold hover:bg-forest-600 transition-colors disabled:opacity-40 disabled:cursor-not-allowed" disabled>Import</button>
+          <button data-id="204" id="csv-import-cancel" class="flex-1 py-2.5 bg-parchment-200 text-ink-700 rounded-lg text-sm font-semibold hover:bg-parchment-300 transition-colors">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- Edit Disc Modal -->
+  <div id="modal-edit-disc" class="modal-overlay">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 class="font-bold text-base" id="edit-modal-title">✏️ Edit Disc</h3>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="edit-disc-idx" value="" />
+        <div class="mb-3">
+          <label>Disc Name <span class="req">*</span></label>
+          <input type="text" id="edit-name" placeholder="e.g. Destroyer" style="width:100%;" />
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div><label>Manufacturer <span class="req">*</span></label>
+            <input type="text" id="edit-brand" placeholder="e.g. Innova" list="mfr-list-edit" autocomplete="off" />
+            <datalist id="mfr-list-edit"></datalist>
+          </div>
+          <div><label>Plastic</label>
+            <input type="text" id="edit-plastic" placeholder="Select manufacturer first" list="plastic-list-edit" autocomplete="off" />
+            <datalist id="plastic-list-edit"></datalist>
+          </div>
+          <div><label>Type <span class="req">*</span></label>
+            <select id="edit-type">
+              <option value="Distance Driver">Distance Driver</option>
+              <option value="Fairway Driver">Fairway Driver</option>
+              <option value="Midrange">Midrange</option>
+              <option value="Putter">Putter</option>
+            </select>
+          </div>
+          <div><label>Weight (g)</label><input type="number" id="edit-weight" min="100" max="200" /></div>
+          <div><label>Speed <span class="req">*</span></label><input type="number" id="edit-speed" min="1" max="14" step="0.5" /></div>
+          <div><label>Glide <span class="req">*</span></label><input type="number" id="edit-glide" min="1" max="7" step="0.5" /></div>
+          <div><label>Turn <span class="req">*</span></label><input type="number" id="edit-turn" min="-5" max="1" step="0.5" /></div>
+          <div><label>Fade <span class="req">*</span></label><input type="number" id="edit-fade" min="0" max="5" step="0.5" /></div>
+        </div>
+        <div class="mt-3">
+          <label>Disc Photo <span class="text-[0.65rem] text-ink-400 font-normal">(optional — take photo or upload image)</span></label>
+          <div class="flex items-center gap-3 mt-1">
+            <div id="edit-img-placeholder" class="disc-img-placeholder" onclick="openCircularCamera('edit')" title="Tap to open circular camera">📷</div>
+            <img id="edit-img-preview" class="disc-img-preview hidden" src="" alt="Disc preview" />
+            <input type="file" id="edit-img-input" accept="image/*" class="hidden" />
+            <div class="flex flex-col gap-1.5">
+              <button type="button" onclick="openCircularCamera('edit')" class="px-3 py-1.5 bg-forest-700 text-white rounded-lg text-xs font-semibold hover:bg-forest-600 transition-colors">📷 Camera</button>
+              <button type="button" onclick="document.getElementById('edit-img-input').click()" class="px-3 py-1.5 bg-parchment-200 text-ink-700 rounded-lg text-xs font-semibold hover:bg-parchment-300 transition-colors">🖼️ Library</button>
+              <button type="button" id="edit-img-clear" class="px-3 py-1.5 bg-parchment-200 text-ink-700 rounded-lg text-xs font-semibold hover:bg-parchment-300 transition-colors hidden">✕ Remove</button>
+            </div>
+            <input type="hidden" id="edit-img-data" value="" />
+          </div>
+        </div>
+        <div class="mt-3">
+          <label>Notes (optional)</label>
+          <textarea id="edit-notes" placeholder="Any personal notes..."></textarea>
+        </div>
+        <div class="flex gap-2 mt-4">
+          <button id="edit-disc-submit" class="flex-1 py-2.5 bg-forest-700 text-white rounded-lg text-sm font-semibold hover:bg-forest-600 transition-colors">Save Changes</button>
+          <button id="edit-disc-cancel" class="flex-1 py-2.5 bg-parchment-200 text-ink-700 rounded-lg text-sm font-semibold hover:bg-parchment-300 transition-colors">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast-container" class="toast-container"></div>
+
+  <script>
+    // ===== APPLE TOUCH ICON & PWA MANIFEST =====
+    (function() {
+      var canvas = document.createElement('canvas');
+      canvas.width = 180; canvas.height = 180;
+      var ctx = canvas.getContext('2d');
+      // Rounded green background
+      ctx.fillStyle = '#1a3c2e';
+      ctx.beginPath();
+      ctx.roundRect(0, 0, 180, 180, 36);
+      ctx.fill();
+      // Outer gold rim
+      ctx.beginPath(); ctx.arc(90, 90, 74, 0, Math.PI * 2);
+      ctx.fillStyle = '#c9a227'; ctx.fill();
+      // White flight plate
+      ctx.beginPath(); ctx.arc(90, 90, 62, 0, Math.PI * 2);
+      ctx.fillStyle = '#ffffff'; ctx.fill();
+      // Flight rings
+      ctx.strokeStyle = '#c9a227'; ctx.lineWidth = 3;
+      ctx.beginPath(); ctx.arc(90, 90, 62, 0, Math.PI * 2); ctx.stroke();
+      ctx.beginPath(); ctx.arc(90, 90, 47, 0, Math.PI * 2); ctx.stroke();
+      ctx.lineWidth = 2;
+      ctx.beginPath(); ctx.arc(90, 90, 32, 0, Math.PI * 2); ctx.stroke();
+      // Center dome (green)
+      ctx.beginPath(); ctx.arc(90, 90, 20, 0, Math.PI * 2);
+      ctx.fillStyle = '#1a3c2e'; ctx.fill();
+      ctx.strokeStyle = '#c9a227'; ctx.lineWidth = 2; ctx.stroke();
+      var dataUrl = canvas.toDataURL('image/png');
+      var iconLink = document.getElementById('apple-touch-icon');
+      if (iconLink) iconLink.href = dataUrl;
+      var manifest = {
+        name: 'Disc Golf Guide',
+        short_name: 'Disc Guide',
+        display: 'standalone',
+        background_color: '#1a3c2e',
+        theme_color: '#1a3c2e',
+        icons: [{ src: dataUrl, sizes: '180x180', type: 'image/png' }]
+      };
+      var manifestLink = document.getElementById('pwa-manifest');
+      if (manifestLink) manifestLink.href = 'data:application/manifest+json,' + encodeURIComponent(JSON.stringify(manifest));
+    })();
+
+    // ===== GLOBAL STATE =====
+    let throwMode = 'RHBH'; // RHBH, RHFH, LHBH, LHFH
+
+    function isTurnRight() { return throwMode === 'RHBH' || throwMode === 'LHFH'; }
+    function isForehand() { return throwMode === 'RHFH' || throwMode === 'LHFH'; }
+
+    // ===== TOAST SYSTEM =====
+    function showToast(message, type) {
+      type = type || 'success';
+      var container = document.getElementById('toast-container');
+      var toast = document.createElement('div');
+      toast.className = 'toast toast-' + type;
+      toast.textContent = message;
+      container.appendChild(toast);
+      requestAnimationFrame(function() {
+        requestAnimationFrame(function() { toast.classList.add('show'); });
+      });
+      setTimeout(function() {
+        toast.classList.remove('show');
+        setTimeout(function() { toast.remove(); }, 300);
+      }, 3000);
+    }
+
+    // ===== DEFAULT DISC DATA (ALL 28) =====
+    const defaultDiscs = [
+      { name:"Wraith", brand:"Innova", plastic:"Halo", type:"Distance Driver", speed:11, glide:5, turn:-1, fade:3, weight:170, stability:"overstable", fhRating:"good", icon:"🌀", inbag:true,
+        bestFor:["Long overstable lines","Headwind distance","Reliable fade finish"],
+        tip_bh:"Throw flat and trust the fade — workhorse distance disc.",
+        tip_fh:"Great forehand distance driver — holds any line and fades reliably." },
+      { name:"Beast", brand:"Innova", plastic:"Halo", type:"Distance Driver", speed:10, glide:5, turn:-2, fade:2, weight:173, stability:"understable", fhRating:"fair", icon:"🐉", inbag:true,
+        bestFor:["Tailwind distance","Long S-curve shots","High-speed turnover lines"],
+        tip_bh:"Slight anhyzer and let it S-curve — great tailwind bomber.",
+        tip_fh:"Forehand risk — may turn over. Keep nose down and throw with control." },
+      { name:"Destroyer", brand:"Innova", plastic:"Champion", type:"Distance Driver", speed:12, glide:5, turn:-1, fade:3, weight:168, stability:"overstable", fhRating:"good", icon:"💥", inbag:true,
+        bestFor:["Max overstable distance","Headwind lines","Hyzer bombs"],
+        tip_bh:"Power disc — throw hard hyzer for a big fade at distance.",
+        tip_fh:"Excellent forehand distance disc — consistent fade under power." },
+      { name:"Photon", brand:"MVP", plastic:"Plasma", type:"Distance Driver", speed:11, glide:5, turn:-1, fade:2.5, weight:167, stability:"overstable", fhRating:"good", icon:"⚡", inbag:true,
+        bestFor:["Max distance headwind","Skip shots","Hyzer finishers"],
+        tip_bh:"Throw hard hyzer in headwinds — it will finish with a strong fade.",
+        tip_fh:"Your max-distance forehand disc — holds any line and fades reliably." },
+      { name:"Mayhem", brand:"Axiom", plastic:"Neutron", type:"Distance Driver", speed:13, glide:5, turn:-1.5, fade:2, weight:174, stability:"understable", fhRating:"fair", icon:"🌪️", inbag:true,
+        bestFor:["Max distance calm","High-speed turnover","Tailwind bombs"],
+        tip_bh:"Needs arm speed — at full power it turns and burns for max distance.",
+        tip_fh:"Forehand caution — high speed needs strong snap or it turns over." },
+      { name:"Inertia", brand:"MVP", plastic:"Neutron", type:"Distance Driver", speed:9, glide:5, turn:-2, fade:2, weight:156, stability:"understable", fhRating:"fair", icon:"🍃", inbag:true,
+        bestFor:["Understable distance","Tailwind shots","Wooded turnover lines"],
+        tip_bh:"Great for navigating gaps with a gentle turn then fade.",
+        tip_fh:"Forehand risk — may turn over. Only for experienced forehand with control." },
+      { name:"Heat", brand:"Discraft", plastic:"ESP FLX", type:"Distance Driver", speed:9, glide:6, turn:-3, fade:1, weight:173, stability:"very-understable", fhRating:"avoid", icon:"🔥", inbag:true,
+        bestFor:["Max turnover distance","Tailwind bombs","Roller starts"],
+        tip_bh:"Mild anhyzer for big turning S-curves — ride the tailwind for distance.",
+        tip_fh:"Avoid forehand — very high turn will cause uncontrolled turnover or roller." },
+      { name:"Boss", brand:"Innova", plastic:"Blizzard Champion", type:"Distance Driver", speed:13, glide:5, turn:-1, fade:3, weight:150, stability:"overstable", fhRating:"good", icon:"👑", inbag:false,
+        bestFor:["Ultra-light max distance","Tailwind bombs","High-speed overstable"],
+        tip_bh:"Very light disc — needs a smooth release, goes farther than you expect.",
+        tip_fh:"Light weight makes forehand tricky — control your power carefully." },
+      { name:"Valkyrie", brand:"Innova", plastic:"DX", type:"Distance Driver", speed:9, glide:4, turn:-2, fade:2, weight:166, stability:"understable", fhRating:"fair", icon:"⚔️", inbag:false,
+        bestFor:["Long turnover lines","Tailwind distance","Roller starts"],
+        tip_bh:"Slight anhyzer release and watch it S-curve then straighten.",
+        tip_fh:"Forehand risk — may drift sideways. Keep nose down for control." },
+      { name:"Resistor", brand:"MVP", plastic:"Neutron", type:"Fairway Driver", speed:6.5, glide:4, turn:0, fade:3.5, weight:170, stability:"overstable", fhRating:"excellent", icon:"🔒", inbag:true,
+        bestFor:["Forehand hyzer approaches","Headwind fairway","Skip shots"],
+        tip_bh:"Nose down, firm release — reliable hard fade for power throwers.",
+        tip_fh:"Ideal forehand hyzer — the fade is powerful and predictable. Spike and stick." },
+      { name:"Volt", brand:"MVP", plastic:"Neutron", type:"Fairway Driver", speed:8, glide:5, turn:-0.5, fade:2, weight:174, stability:"overstable", fhRating:"excellent", icon:"🌩️", inbag:true,
+        bestFor:["Reliable overstable fairway","Crosswind control","Utility approach shots"],
+        tip_bh:"Throw flat for a predictable fade finish every time.",
+        tip_fh:"Reliable forehand fairway — flat release gives a clean fade every time." },
+      { name:"Jackalope", brand:"Mint", plastic:"Eternal", type:"Fairway Driver", speed:8, glide:5, turn:-2, fade:1, weight:173, stability:"understable", fhRating:"avoid", icon:"🐇", inbag:true,
+        bestFor:["Roller lines","Understable fairway distance","Tailwind bombs"],
+        tip_bh:"Mild anhyzer releases into long turning S-curves — watch for rollers.",
+        tip_fh:"Avoid forehand — high turn will cause uncontrolled turnover or roller." },
+      { name:"River", brand:"Latitude 64", plastic:"Retro", type:"Fairway Driver", speed:7, glide:7, turn:-1, fade:1, weight:170, stability:"understable", fhRating:"fair", icon:"🌊", inbag:true,
+        bestFor:["Wooded fairway control","Tailwind glide shots","Gentle turnover lines"],
+        tip_bh:"High glide disc — let it float and turn gently through tight gaps.",
+        tip_fh:"Forehand caution — slight turn may drift. Keep flat and controlled." },
+      { name:"Cheetah", brand:"Innova", plastic:"DX", type:"Fairway Driver", speed:6, glide:4, turn:-2, fade:2, weight:161, stability:"understable", fhRating:"fair", icon:"🐆", inbag:false,
+        bestFor:["Beginner-friendly fairway","Wooded shots","Gentle turnover"],
+        tip_bh:"Easy to throw straight — gentle turn makes it forgiving.",
+        tip_fh:"Forehand caution — may drift slightly." },
+      { name:"Leopard", brand:"Innova", plastic:"DX", type:"Fairway Driver", speed:6, glide:5, turn:-2, fade:1, weight:165, stability:"understable", fhRating:"fair", icon:"🐈", inbag:false,
+        notes:"165g",
+        bestFor:["Beginner fairway","Hyzer-flip lines","Tunnel shots"],
+        tip_bh:"Very forgiving — hyzer flip it to flat for long straight glide.",
+        tip_fh:"Forehand risk — turn may cause drift under power." },
+      { name:"Leopard", brand:"Innova", plastic:"DX", type:"Fairway Driver", speed:6, glide:5, turn:-2, fade:1, weight:155, stability:"understable", fhRating:"fair", icon:"🐈", inbag:false,
+        notes:"155g",
+        bestFor:["Beginner fairway","Tailwind shots","Easy S-curves"],
+        tip_bh:"Light weight adds more understable flight — great for new players.",
+        tip_fh:"Light disc goes more understable forehand — control power carefully." },
+      { name:"Leopard", brand:"Innova", plastic:"DX", type:"Fairway Driver", speed:6, glide:5, turn:-2, fade:1, weight:149, stability:"understable", fhRating:"fair", icon:"🐈", inbag:false,
+        notes:"149g",
+        bestFor:["Beginner distance","Understable tailwind","Easy turnover"],
+        tip_bh:"Very light — flies very understable, great for turnover shots.",
+        tip_fh:"Very light makes forehand unpredictable — practice with heavier discs first." },
+      { name:"Buzzz", brand:"Discraft", plastic:"ESP", type:"Midrange", speed:5, glide:4, turn:-1, fade:1, weight:171, stability:"understable", fhRating:"fair", icon:"🐝", inbag:true,
+        bestFor:["Straight approach shots","Accurate mid-distance","Touch shots"],
+        tip_bh:"One of the straightest discs made — trust it to fly exactly where you aim.",
+        tip_fh:"Forehand Buzzz tends to fade early — throw with slight hyzer for control." },
+      { name:"Mustang", brand:"Mint", plastic:"Eternal", type:"Midrange", speed:5, glide:4, turn:0, fade:2, weight:177, stability:"overstable", fhRating:"excellent", icon:"🐎", inbag:true,
+        bestFor:["Go-to OS midrange","Approach accuracy","Headwind mid"],
+        tip_bh:"Flat release fades reliably — perfect 200-ft approach disc.",
+        tip_fh:"Best forehand midrange — flat to slight hyzer, fades on command. Workhorse disc." },
+      { name:"Salamander", brand:"Mint", plastic:"Apex", type:"Midrange", speed:6, glide:6, turn:-2, fade:1, weight:155, stability:"understable", fhRating:"avoid", icon:"🦎", inbag:true,
+        bestFor:["Understable mid approaches","Tailwind turnover","Turning short lines"],
+        tip_bh:"Easy to turn over — great for turning short approach lines.",
+        tip_fh:"Avoid forehand — will turn hard. Only for intentional roller shots." },
+      { name:"Lobster", brand:"Mint", plastic:"Sublime", type:"Midrange", speed:5, glide:5, turn:-2, fade:1, weight:174, stability:"understable", fhRating:"fair", icon:"🦞", inbag:true,
+        bestFor:["Understable mid approach","Wooded turnover lines","Gentle turn finisher"],
+        tip_bh:"Release flat and let it turn gently — great for tight wooded approaches.",
+        tip_fh:"Forehand Lobster can turn — use only with controlled low-power release." },
+      { name:"Shark", brand:"Innova", plastic:"DX", type:"Midrange", speed:4, glide:4, turn:0, fade:2, weight:174, stability:"overstable", fhRating:"excellent", icon:"🦈", inbag:true,
+        bestFor:["Accurate OS mid approach","Headwind midrange","Touch hyzer shots"],
+        tip_bh:"Dead-straight with a reliable fade — great for consistent approach shots.",
+        tip_fh:"Reliable forehand mid — predictable fade makes it a great approach disc." },
+      { name:"Buzzz", brand:"Discraft", plastic:"ESP", type:"Midrange", speed:5, glide:5, turn:-1, fade:1, weight:177, stability:"understable", fhRating:"fair", icon:"🐝", inbag:false,
+        notes:"Mesmerizing Swirl",
+        bestFor:["Straight approach shots","Accurate mid-distance","Collector/backup Buzzz"],
+        tip_bh:"Identical flight to the ESP Buzzz — keep as backup or collector.",
+        tip_fh:"Same forehand behavior as your in-bag Buzzz — slight fade." },
+      { name:"Classic Blend Judge", brand:"Dynamic Discs", plastic:"Classic Blend", type:"Putter", speed:2, glide:4, turn:0, fade:1, weight:174, stability:"neutral", fhRating:"excellent", icon:"⚖️", inbag:true,
+        bestFor:["Straight putter approach","Putting","Short straight shots"],
+        tip_bh:"Gentle neutral flight — trust it to fly straight and finish with a slight fade.",
+        tip_fh:"Consistent forehand approach putter — neutral flight holds line well." },
+      { name:"Colt", brand:"Innova", plastic:"DX", type:"Putter", speed:3, glide:4, turn:-1, fade:1, weight:165, stability:"neutral", fhRating:"good", icon:"🔫", inbag:true,
+        bestFor:["Short approach shots","Touch shots inside 100ft","Controlled putt & approach"],
+        tip_bh:"Great touch disc — slight turn makes it drift gently on approach.",
+        tip_fh:"Reliable forehand approach putter — slight drift is very controllable." },
+      { name:"Judge", brand:"Dynamic Discs", plastic:"Classic", type:"Putter", speed:2, glide:4, turn:0, fade:1, weight:174, stability:"neutral", fhRating:"excellent", icon:"⚖️", inbag:false,
+        bestFor:["Straight putt & approach","Consistent putting","Beginner putter"],
+        tip_bh:"One of the most neutral putters ever made — flies exactly where you aim.",
+        tip_fh:"Excellent forehand putter — dead straight with a clean fade finish." },
+      { name:"Aviar", brand:"Innova", plastic:"DX", type:"Putter", speed:2, glide:3, turn:0, fade:1, weight:147, stability:"neutral", fhRating:"excellent", icon:"🦅", inbag:false,
+        bestFor:["Classic putter","Straight approaches","Reliable putting"],
+        tip_bh:"A classic for a reason — reliable straight flight to the basket.",
+        tip_fh:"Great forehand putter — neutral flight is very controllable." },
+      { name:"Birdie", brand:"Innova", plastic:"DX", type:"Putter", speed:1, glide:2, turn:0, fade:0, weight:169, stability:"neutral", fhRating:"excellent", icon:"🐦", inbag:false,
+        bestFor:["Ultra-short putts","Mini disc putting practice","Touch shots"],
+        tip_bh:"Extremely straight and slow — built purely for precision putting.",
+        tip_fh:"Very controllable forehand — zero fade makes it go dead straight." },
+    ];
+
+
+    // ===== MANUFACTURER & PLASTIC DATA =====
+    var PLASTICS_DATA = {
+      "Innova": ["DX","Pro","XT","R-Pro","Star","Champion","Halo Star","GStar","Glow Champion","Proto Glow","Blizzard Champion","Color Glow Champion","Metal Flake Champion","Luster Champion"],
+      "Discraft": ["Pro-D","X-Line","Putter Line","Putter Line Soft","ESP","Z Line","Big Z","Elite Z","Titanium","FLX","Z Lite","Z Glo","Mega Glo","Recycled ESP","Jawbreaker","Cryztal Z","CryZtal Sparkle"],
+      "Dynamic Discs": ["Classic","Classic Soft","Prime","Prime Burst","Fuzion","Fuzion Orbit","Fuzion Burst","Lucid","Lucid Air","Lucid Ice","Lucid Ice Orbit","Drift","Moonshine","Emac Gold"],
+      "Latitude 64": ["Zero Soft","Zero Medium","Zero Hard","Retro","Sense","Gold","Grand","Opto","Opto Air","Opto Ice","Zero Gravity","Royal","Moonshine"],
+      "Westside Discs": ["BT Soft","BT Medium","BT Hard","Origio","Origio Burst","Tournament","Tournament Orbit","VIP","VIP Air","VIP Ice","Moonshine","Revive"],
+      "MVP": ["Electron Soft","Electron Medium","Electron Firm","Neutron","Neutron Soft","Plasma","Proton","Fission","Eclipse","Total Eclipse","Cosmic Neutron","Cosmic Electron","Hypnotic"],
+      "Axiom": ["Electron Soft","Electron Medium","Electron Firm","Neutron","Neutron Soft","Plasma","Proton","Fission","Eclipse","Total Eclipse","Cosmic Neutron","Hypnotic"],
+      "Streamline": ["Electron Soft","Electron Medium","Electron Firm","Neutron","Plasma","Proton","Fission","Eclipse"],
+      "Discmania": ["D-Line","P-Line","Exo","Exo Soft","Geo","Active","Active Premium","S-Line","Q-Line","C-Line","Neo","Lux","Meta","Forge","G-Line","Color Glow C-Line","Blizzard C-Line","Swirly S-Line"],
+      "Kastaplast": ["K3","K3 Glow","K1","K1 Soft","K1 Hard","K1 Glow","K4","K4 Glow"],
+      "Prodigy": ["BaseGrip","200","300","300 Fractal","350G","400","400G","400 Spectrum","500","500 Spectrum","ProFlex","DuraFlex","Ultra Soft","750","750G","Air","400 Glow"],
+      "Gateway": ["Sure-Grip","Sure-Grip Soft","Diamond","Warrior","Wizard SSS","Evil","Morph","Illusion"],
+      "Lone Star Disc": ["Bravo","Bravo Burst","Victor","Victor 2","Alpha","Glow"],
+      "Clash Discs": ["Hardy","Softy","Steady","Steady Ring","Sunny","Planty"],
+      "RPM Discs": ["Cosmic","Strata","Atomic","Glow"],
+      "Thought Space Athletics": ["Ethos","Aura","Nerve"],
+      "Mint Discs": ["Royal","Apex","Sublime","Eternal"],
+      "Infinite Discs": ["I-Blend","Halo","Glow","X-Out"],
+      "Yikun": ["Wing","Tiger","Tiger Glow"],
+      "Prodiscus": ["Basic","Premium","Ultrium"],
+      "Viking Discs": ["Ground","Storm","Blizzard"],
+      "Daredevil Discs": ["Birchwood","Lumberjack","Midnight"],
+      "Above Ground Level (AGL)": ["Woodland","Pine","Mistral"],
+      "EV-7": ["OG Soft","OG Medium","OG Firm","Elev8"],
+      "3rd Coast Discs": ["BioFuzion","Prime","Glow"],
+      "Millennium Discs": ["Standard","Quantum","Sirius","Swirly"],
+      "DGA": ["Pro","Proline","Swirly Pro","Aftershock"],
+      "Vibram": ["Natural","Medium","Firm","X-Link Medium","X-Link Firm"],
+      "Hyzerbomb": ["Plastic","Premium","Glow"],
+      "Doomsday Discs": ["Solvent","Standard","Rogue","Hero"],
+      "Loft Discs": ["Soft","Medium","Premium"]
+    };
+
+    var ALL_MANUFACTURERS = Object.keys(PLASTICS_DATA).sort();
+
+    function populateMfrDatalist(datalistId) {
+      var dl = document.getElementById(datalistId);
+      if (!dl) return;
+      dl.innerHTML = '';
+      ALL_MANUFACTURERS.forEach(function(m) {
+        var opt = document.createElement('option');
+        opt.value = m;
+        dl.appendChild(opt);
+      });
+    }
+
+    function updatePlasticDatalist(mfr, datalistId) {
+      var dl = document.getElementById(datalistId);
+      if (!dl) return;
+      dl.innerHTML = '';
+      var plastics = PLASTICS_DATA[mfr] || [];
+      plastics.forEach(function(p) {
+        var opt = document.createElement('option');
+        opt.value = p;
+        dl.appendChild(opt);
+      });
+    }
+
+    // ===== PLAYER PROFILES & PERSISTENCE =====
+    let currentPlayer = 'Don';
+    let cardFilter = 'all';
+    let cardTypeFilter = 'all';
+
+    function getProfiles() {
+      try { return JSON.parse(localStorage.getItem('discGolfProfiles') || '[]'); } catch(e) { return []; }
+    }
+    function saveProfiles(p) {
+      try { localStorage.setItem('discGolfProfiles', JSON.stringify(p)); } catch(e) {}
+    }
+    function getStorageKey() { return 'discGolfBag_' + currentPlayer; }
+
+    let discs = [];
+
+    function loadDiscsFromStorage() {
+      try {
+        var stored = localStorage.getItem(getStorageKey());
+        if (stored) {
+          var parsed = JSON.parse(stored);
+          if (Array.isArray(parsed) && parsed.length > 0) {
+            parsed.forEach(function(d) {
+              if (typeof d.inbag === 'undefined') d.inbag = true;
+            });
+            discs = parsed;
+            return;
+          }
+        }
+      } catch(e) {}
+      discs = JSON.parse(JSON.stringify(defaultDiscs));
+    }
+
+    function saveDiscsToStorage() {
+      try {
+        localStorage.setItem(getStorageKey(), JSON.stringify(discs));
+      } catch(e) {
+        showToast('⚠️ Storage full — photos may not be saved. Try removing a photo.', 'error');
+        // Attempt to save without photos as fallback
+        try {
+          var discsSafe = discs.map(function(d) { var c = Object.assign({}, d); delete c.photo; return c; });
+          localStorage.setItem(getStorageKey(), JSON.stringify(discsSafe));
+          showToast('💾 Saved without photos — reduce photo count to re-enable', 'warning');
+        } catch(e2) {}
+      }
+    }
+
+    // Init profiles
+    (function initProfiles() {
+      var profiles = getProfiles();
+      if (profiles.length === 0) {
+        profiles = ['Don'];
+        saveProfiles(profiles);
+      }
+      currentPlayer = profiles[0];
+      loadDiscsFromStorage();
+      populatePlayerSelect();
+    })();
+
+    function populatePlayerSelect() {
+      ['player-select', 'player-select-desktop'].forEach(function(selId) {
+        var sel = document.getElementById(selId);
+        if (!sel) return;
+        var profiles = getProfiles();
+        sel.innerHTML = '';
+        profiles.forEach(function(p) {
+          var opt = document.createElement('option');
+          opt.value = p;
+          opt.textContent = p;
+          if (p === currentPlayer) opt.selected = true;
+          sel.appendChild(opt);
+        });
+        var addOpt = document.createElement('option');
+        addOpt.value = '__new__';
+        addOpt.textContent = '＋ Add New Player';
+        sel.appendChild(addOpt);
+      });
+    }
+
+    // ===== HELPERS =====
+    function getInBagDiscs() { return discs.filter(function(d) { return d.inbag; }); }
+    function getOutOfBagDiscs() { return discs.filter(function(d) { return !d.inbag; }); }
+
+    function calcStability(turn, fade) {
+      if (fade >= 4 && turn >= -0.5) return "very-overstable";
+      if (fade >= 2.5 && turn >= -1) return "overstable";
+      if (turn <= -2.5) return "very-understable";
+      if (turn <= -1.5 || (turn <= -1 && fade <= 1)) return "understable";
+      return "neutral";
+    }
+
+    function calcFhRating(stability) {
+      if (stability === "very-overstable" || stability === "overstable") return "excellent";
+      if (stability === "neutral") return "good";
+      if (stability === "understable") return "fair";
+      return "avoid";
+    }
+
+    function autoGenBestFor(stability, type) {
+      var base = {
+        "very-overstable":["Max overstable utility","Headwind fighter","Skip shots"],
+        "overstable":["Reliable fade shots","Headwind control","Hyzer approaches"],
+        "neutral":["Straight shots","Versatile lines","All-around control"],
+        "understable":["Turnover lines","Tailwind shots","S-curve shaping"],
+        "very-understable":["Max turnover","Rollers","Tailwind bombs"],
+      };
+      return base[stability] || base["neutral"];
+    }
+
+    function autoGenTipBH(stability, name) {
+      var tips = {
+        "very-overstable":"Super reliable fade — spike hyzers and skip shots all day.",
+        "overstable":"Throw flat and trust the fade — dependable finish.",
+        "neutral":"Versatile disc — flies where you aim it. Great for straight lines.",
+        "understable":"Release flat or slight anhyzer for a smooth turn.",
+        "very-understable":"Big turn — use for turnover lines and rollers.",
+      };
+      return tips[stability] || tips["neutral"];
+    }
+
+    function autoGenTipFH(stability, name) {
+      var tips = {
+        "very-overstable":"Excellent forehand disc — max overstable fade, very predictable.",
+        "overstable":"Great forehand choice — reliable fade on command.",
+        "neutral":"Solid forehand option — holds line well with controlled release.",
+        "understable":"Forehand caution — may turn over. Keep nose down.",
+        "very-understable":"Avoid forehand — high turnover risk, will roll.",
+      };
+      return tips[stability] || tips["neutral"];
+    }
+
+    // ===== FOREHAND STABILITY ADJUSTMENT =====
+    var stabilityTiers = ['very-understable','understable','neutral','overstable','very-overstable'];
+    function adjustStabilityForFH(stability) {
+      var i = stabilityTiers.indexOf(stability);
+      if (i === -1) return stability;
+      return stabilityTiers[Math.min(i + 1, 4)];
+    }
+
+    function getEffectiveStability(d) {
+      if (isForehand()) return adjustStabilityForFH(d.stability);
+      return d.stability;
+    }
+
+    // ===== WIND RATING LOGIC =====
+    var ratingLabels = { excellent:'Excellent', good:'Good', fair:'Fair', avoid:'Avoid' };
+    var ratingOrder = { excellent:4, good:3, fair:2, avoid:1 };
+
+    // Base wind rating tables (stability → strength → rating)
+    var windTables = {
+      calm: {
+        "very-overstable":{light:"good",moderate:"good",strong:"good"},
+        "overstable":{light:"excellent",moderate:"excellent",strong:"good"},
+        "neutral":{light:"excellent",moderate:"excellent",strong:"excellent"},
+        "understable":{light:"excellent",moderate:"good",strong:"good"},
+        "very-understable":{light:"good",moderate:"fair",strong:"fair"}
+      },
+      headwind: {
+        "very-overstable":{light:"excellent",moderate:"excellent",strong:"good"},
+        "overstable":{light:"excellent",moderate:"good",strong:"fair"},
+        "neutral":{light:"good",moderate:"fair",strong:"avoid"},
+        "understable":{light:"fair",moderate:"avoid",strong:"avoid"},
+        "very-understable":{light:"avoid",moderate:"avoid",strong:"avoid"}
+      },
+      tailwind: {
+        "very-overstable":{light:"fair",moderate:"fair",strong:"good"},
+        "overstable":{light:"good",moderate:"excellent",strong:"good"},
+        "neutral":{light:"excellent",moderate:"good",strong:"fair"},
+        "understable":{light:"excellent",moderate:"excellent",strong:"good"},
+        "very-understable":{light:"good",moderate:"good",strong:"fair"}
+      },
+      crossAids: {
+        "very-overstable":{light:"fair",moderate:"fair",strong:"avoid"},
+        "overstable":{light:"good",moderate:"fair",strong:"avoid"},
+        "neutral":{light:"good",moderate:"good",strong:"fair"},
+        "understable":{light:"excellent",moderate:"excellent",strong:"good"},
+        "very-understable":{light:"good",moderate:"fair",strong:"avoid"}
+      },
+      crossFights: {
+        "very-overstable":{light:"excellent",moderate:"excellent",strong:"good"},
+        "overstable":{light:"good",moderate:"excellent",strong:"good"},
+        "neutral":{light:"good",moderate:"good",strong:"fair"},
+        "understable":{light:"fair",moderate:"avoid",strong:"avoid"},
+        "very-understable":{light:"avoid",moderate:"avoid",strong:"avoid"}
+      }
+    };
+
+    function getRating(stability, condition, strength) {
+      var tableKey = condition;
+      if (condition === 'crossLR') {
+        tableKey = isTurnRight() ? 'crossAids' : 'crossFights';
+      } else if (condition === 'crossRL') {
+        tableKey = isTurnRight() ? 'crossFights' : 'crossAids';
+      }
+      var effStab = isForehand() ? adjustStabilityForFH(stability) : stability;
+      return windTables[tableKey]?.[effStab]?.[strength] || "fair";
+    }
+
+    function ratingPill(rating) {
+      var icons = { excellent:'✅', good:'👍', fair:'⚠️', avoid:'❌' };
+      return '<span class="pill pill-' + rating + '">' + icons[rating] + ' ' + ratingLabels[rating] + '</span>';
+    }
+    function ratingIcon(rating) {
+      var icons = { excellent:'✅', good:'👍', fair:'⚠️', avoid:'❌' };
+      var titles = { excellent:'Excellent', good:'Good', fair:'Fair', avoid:'Avoid' };
+      return '<span title="' + (titles[rating]||rating) + '" style="font-size:1.1rem;line-height:1;">' + (icons[rating]||'') + '</span>';
+    }
+
+    function getTypeBadgeClass(type) {
+      if (type.includes('Distance')) return 'type-distance';
+      if (type.includes('Fairway')) return 'type-fairway';
+      if (type.includes('Midrange')) return 'type-midrange';
+      return 'type-putter';
+    }
+
+    function getBestUse(d) {
+      if (d.bestFor && d.bestFor.length > 0) return d.bestFor[0];
+      return d.type;
+    }
+
+    // ===== TIP MIRRORING =====
+    function mirrorTip(tip) {
+      if (!tip) return tip;
+      return tip.replace(/\b(left|right)\b/gi, function(m) {
+        if (m === 'left') return 'right';
+        if (m === 'Left') return 'Right';
+        if (m === 'LEFT') return 'RIGHT';
+        if (m === 'right') return 'left';
+        if (m === 'Right') return 'Left';
+        if (m === 'RIGHT') return 'LEFT';
+        return m;
+      });
+    }
+
+    function getThrowTip(d) {
+      var baseBH = d.tip_bh || autoGenTipBH(d.stability, d.name);
+      var baseFH = d.tip_fh || autoGenTipFH(d.stability, d.name);
+      switch (throwMode) {
+        case 'RHBH': return d.tip_rhbh || mirrorTip(baseBH);
+        case 'RHFH': return d.tip_rhfh || baseFH;
+        case 'LHBH': return baseBH;
+        case 'LHFH': return baseFH;
+      }
+      return baseBH;
+    }
+
+    function getDiscDisplayName(d) {
+      var sameNameDiscs = discs.filter(function(dd) { return dd.name === d.name; });
+      if (sameNameDiscs.length > 1) {
+        return d.name + ' <span class="inline-flex items-center ml-1 px-1.5 py-0 bg-parchment-200 text-ink-600 rounded text-[0.6rem] font-bold">' + d.weight + 'g</span>';
+      }
+      return d.name;
+    }
+
+    function getDiscDisplayNamePlain(d) {
+      var sameNameDiscs = discs.filter(function(dd) { return dd.name === d.name; });
+      if (sameNameDiscs.length > 1) return d.name + ' (' + d.weight + 'g)';
+      return d.name;
+    }
+
+    let currentStrength = 'light';
+    var typeOrder = ['Distance Driver','Fairway Driver','Midrange','Putter'];
+
+    // ===== WIND MATRIX =====
+    function renderWindMatrix() {
+      var tbody = document.getElementById('wind-matrix-body');
+      var bagDiscs = getInBagDiscs();
+      var html = '';
+      var grouped = {};
+      typeOrder.forEach(function(t) { grouped[t] = []; });
+      bagDiscs.forEach(function(d) { if (grouped[d.type]) grouped[d.type].push(d); });
+
+      var thCrossLR = document.getElementById('th-crossLR');
+      var thCrossRL = document.getElementById('th-crossRL');
+      if (isTurnRight()) {
+        thCrossLR.innerHTML = 'L→R Cross';
+        thCrossRL.innerHTML = 'R→L Cross';
+      } else {
+        thCrossLR.innerHTML = 'L→R Cross';
+        thCrossRL.innerHTML = 'R→L Cross';
+      }
+
+      document.getElementById('wind-matrix-subtitle').textContent = throwMode + ' perspective · ' + bagDiscs.length + ' discs in bag · Select wind strength below';
+
+      var badgeEl = document.getElementById('wind-matrix-badge');
+      if (isTurnRight()) {
+        badgeEl.innerHTML = '→ Turn-Right Fade Left (RHBH / LHFH)';
+        badgeEl.className = 'mode-badge mode-badge-tr mt-2';
+      } else {
+        badgeEl.innerHTML = '← Turn-Left Fade Right (LHBH / RHFH)';
+        badgeEl.className = 'mode-badge mode-badge-tl mt-2';
+      }
+
+      var fadeDir = isTurnRight() ? 'left' : 'right';
+      var turnDir = isTurnRight() ? 'right' : 'left';
+      var fhLabel = isForehand() ? ' (FH)' : '';
+
+      typeOrder.forEach(function(type) {
+        var typeDiscs = grouped[type];
+        if (!typeDiscs.length) return;
+        html += '<tr><td colspan="6" class="group-header-row">' + type + 's</td></tr>';
+        typeDiscs.forEach(function(d) {
+          html += '<tr class="border-b border-parchment-100 hover:bg-parchment-50/60 transition-colors">' +
+            '<td class="px-3 py-2.5"><div class="flex items-center gap-2">' + (d.photo ? '<img src="' + d.photo + '" alt="' + d.name + '" style="width:28px;height:28px;border-radius:50%;object-fit:cover;border:1.5px solid #e5dcc8;flex-shrink:0;" />' : '<span class="text-base">' + d.icon + '</span>') + '<div><div class="font-semibold text-xs text-ink-900">' + getDiscDisplayName(d) + '</div><span class="type-badge ' + getTypeBadgeClass(d.type) + '">' + d.type.replace(' Driver','') + '</span></div></div></td>' +
+            '<td class="text-center px-2 py-2.5">' + ratingIcon(getRating(d.stability, 'headwind', currentStrength)) + '</td>' +
+            '<td class="text-center px-2 py-2.5">' + ratingIcon(getRating(d.stability, 'tailwind', currentStrength)) + '</td>' +
+            '<td class="text-center px-2 py-2.5">' + ratingIcon(getRating(d.stability, 'crossLR', currentStrength)) + '</td>' +
+            '<td class="text-center px-2 py-2.5">' + ratingIcon(getRating(d.stability, 'crossRL', currentStrength)) + '</td>' +
+          '</tr>';
+        });
+      });
+      tbody.innerHTML = html;
+      // Bottom matrix removed per user request
+    }
+
+    function renderCheatSheet() {
+      var aidsLabel, fightsLabel, aidsIcon, fightsIcon, aidsDesc, fightsDesc;
+      if (isTurnRight()) {
+        aidsLabel = 'Cross L→R'; aidsIcon = 'arrow-right'; aidsDesc = 'Pushes right — aids natural turn →';
+        fightsLabel = 'Cross R→L'; fightsIcon = 'arrow-left'; fightsDesc = 'Pushes left — fights natural turn →';
+      } else {
+        aidsLabel = 'Cross R→L'; aidsIcon = 'arrow-left'; aidsDesc = 'Pushes left — aids natural turn ←';
+        fightsLabel = 'Cross L→R'; fightsIcon = 'arrow-right'; fightsDesc = 'Pushes right — fights natural turn ←';
+      }
+
+      var conditions = [
+        { key:'headwind', label:'Headwind', icon:'arrow-up', desc:'Disc into the wind' },
+        { key:'tailwind', label:'Tailwind', icon:'arrow-down', desc:'Wind from behind' },
+        { key: isTurnRight() ? 'crossLR' : 'crossRL', label:aidsLabel, icon:aidsIcon, desc:aidsDesc },
+        { key: isTurnRight() ? 'crossRL' : 'crossLR', label:fightsLabel, icon:fightsIcon, desc:fightsDesc }
+      ];
+
+      var container = document.getElementById('cheat-sheet');
+      var bagDiscs = getInBagDiscs();
+      var html = '';
+
+      conditions.forEach(function(cond) {
+        var ranked = bagDiscs.map(function(d) {
+          return { disc: d, rating: getRating(d.stability, cond.key, currentStrength), score: ratingOrder[getRating(d.stability, cond.key, currentStrength)] };
+        }).sort(function(a, b) { return b.score - a.score; }).slice(0, 3);
+
+        html += '<div class="cheat-card"><div class="flex items-center gap-2 mb-3"><div class="w-8 h-8 rounded-lg bg-forest-700 text-white flex items-center justify-center"><i data-lucide="' + cond.icon + '" class="w-4 h-4"></i></div><div><div class="font-semibold text-sm text-ink-900">' + cond.label + '</div><div class="text-[0.65rem] text-ink-500">' + cond.desc + '</div></div></div><div class="space-y-2">';
+        ranked.forEach(function(r, i) {
+          html += '<div class="flex items-center gap-2"><span class="w-5 h-5 rounded-full bg-forest-700 text-white text-[0.6rem] font-bold flex items-center justify-center">' + (i+1) + '</span>' + (r.disc.photo ? '<img src="' + r.disc.photo + '" style="width:20px;height:20px;border-radius:50%;object-fit:cover;flex-shrink:0;" />' : '<span class="text-base">' + r.disc.icon + '</span>') + '<span class="text-xs font-medium text-ink-900">' + getDiscDisplayNamePlain(r.disc) + '</span>' + ratingPill(r.rating) + '</div>';
+        });
+        html += '</div></div>';
+      });
+
+      container.innerHTML = html;
+      if (typeof lucide !== "undefined" && typeof lucide.createIcons === "function") { lucide.createIcons(); }
+    }
+
+    // ===== SHOT ADVISOR =====
+    function findDiscByStability(stab, types) {
+      return getInBagDiscs().filter(function(d) {
+        return d.stability === stab && (!types || types.indexOf(d.type) !== -1);
+      }).map(function(d){ return getDiscDisplayNamePlain(d); });
+    }
+
+    function pickDiscs(names, fallbackStab, fallbackTypes) {
+      var found = [];
+      var bagDiscs = getInBagDiscs();
+      names.forEach(function(n) {
+        var d = bagDiscs.find(function(dd) { return dd.name === n; });
+        if (d) found.push(getDiscDisplayNamePlain(d));
+      });
+      if (found.length === 0) {
+        var fb = findDiscByStability(fallbackStab, fallbackTypes);
+        return fb.slice(0, 2);
+      }
+      return found.slice(0, 2);
+    }
+
+    function buildTreeBackhand() {
+      var turnLabel = isTurnRight() ? 'right' : 'left';
+      var fadeLabel = isTurnRight() ? 'left' : 'right';
+      var crossAidsLabel = isTurnRight() ? 'Crosswind L→R (aids turn)' : 'Crosswind R→L (aids turn)';
+      var crossFightsLabel = isTurnRight() ? 'Crosswind R→L (fights turn)' : 'Crosswind L→R (fights turn)';
+
+      var shortStraight = pickDiscs(["Classic Blend Judge","Colt"], "neutral", ["Putter"]);
+      var shortHyzer = pickDiscs(["Mustang","Resistor"], "overstable", ["Midrange","Fairway Driver"]);
+      var shortTurnover = pickDiscs(["Colt","Buzzz"], "understable", ["Putter","Midrange"]);
+      var medHeadwind = pickDiscs(["Mustang","Volt"], "overstable", ["Midrange","Fairway Driver"]);
+      var medTailwind = pickDiscs(["Salamander","Lobster"], "understable", ["Midrange"]);
+      var medCalmStraight = pickDiscs(["Classic Blend Judge","Buzzz"], "neutral", ["Putter","Midrange"]);
+      var medCalmHyzer = pickDiscs(["Mustang","Resistor"], "overstable", ["Midrange","Fairway Driver"]);
+      var medCalmTurnover = pickDiscs(["Salamander","Lobster"], "understable", ["Midrange"]);
+      var medCrossAids = pickDiscs(["Salamander","Buzzz"], "understable", ["Midrange"]);
+      var medCrossFights = pickDiscs(["Mustang","Volt"], "overstable", ["Midrange","Fairway Driver"]);
+      var longHeadwind = pickDiscs(["Volt","Wraith"], "overstable", ["Fairway Driver","Distance Driver"]);
+      var longTailwind = pickDiscs(["Beast","Inertia"], "understable", ["Distance Driver"]);
+      var longCalmStraight = pickDiscs(["Wraith","Volt"], "overstable", ["Distance Driver","Fairway Driver"]);
+      var longCalmHyzer = pickDiscs(["Resistor","Destroyer"], "overstable", ["Fairway Driver","Distance Driver"]);
+      var longCalmTurnover = pickDiscs(["Beast","Inertia"], "understable", ["Distance Driver"]);
+      var longCrossAids = pickDiscs(["Inertia","Beast"], "understable", ["Distance Driver"]);
+      var longCrossFights = pickDiscs(["Volt","Resistor"], "overstable", ["Fairway Driver"]);
+      var maxHeadwind = pickDiscs(["Destroyer","Photon"], "overstable", ["Distance Driver"]);
+      var maxTailwind = pickDiscs(["Heat","Mayhem"], "very-understable", ["Distance Driver"]);
+      var maxCalmHigh = pickDiscs(["Destroyer","Photon"], "overstable", ["Distance Driver"]);
+      var maxCalmMod = pickDiscs(["Wraith","Beast"], "understable", ["Distance Driver"]);
+      var maxCrossAids = pickDiscs(["Heat","Mayhem"], "very-understable", ["Distance Driver"]);
+      var maxCrossFights = pickDiscs(["Destroyer","Photon"], "overstable", ["Distance Driver"]);
+
+      return {
+        root:{question:"What's your shot distance?",options:[
+          {label:"Short (<150 ft)",next:"short"},{label:"Medium (150–300 ft)",next:"medium"},{label:"Long (300–400 ft)",next:"long"},{label:"Max Distance (400+ ft)",next:"max"}
+        ]},
+        short:{question:"Shot shape needed?",options:[
+          {label:"Straight / Accurate",next:"result",result:{discs:shortStraight,reason:"Neutral putters for dead-straight approach accuracy"}},
+          {label:"Hyzer (fade "+fadeLabel+")",next:"result",result:{discs:shortHyzer,reason:"Overstable mid/fairway for reliable "+fadeLabel+" fade — dump shots and approaches"}},
+          {label:"Turnover (turn "+turnLabel+")",next:"result",result:{discs:shortTurnover,reason:"Slight "+turnLabel+" turn for shaping short approaches"}}
+        ]},
+        medium:{question:"Wind condition?",options:[
+          {label:"Calm",next:"medium_calm"},
+          {label:"Headwind",next:"result",result:{discs:medHeadwind,reason:"Overstable mid/fairway holds the line against headwind"}},
+          {label:"Tailwind",next:"result",result:{discs:medTailwind,reason:"Understable discs get extra glide riding the tailwind"}},
+          {label:crossAidsLabel,next:"result",result:{discs:medCrossAids,reason:"Let the wind amplify your natural turn for effortless shape"}},
+          {label:crossFightsLabel,next:"result",result:{discs:medCrossFights,reason:"Overstable mids/fairways resist the crosswind push — holds the line"}}
+        ]},
+        medium_calm:{question:"Shot shape?",options:[
+          {label:"Straight",next:"result",result:{discs:medCalmStraight,reason:"Neutral putter or reliable mid for dead-center lines"}},
+          {label:"Hyzer / "+fadeLabel+" finish",next:"result",result:{discs:medCalmHyzer,reason:"Overstable mids with dependable "+fadeLabel+"-finishing fade"}},
+          {label:"Turnover / "+turnLabel+" finish",next:"result",result:{discs:medCalmTurnover,reason:"Understable for smooth "+turnLabel+"-curving turnover lines"}}
+        ]},
+        long:{question:"Wind condition?",options:[
+          {label:"Calm",next:"long_calm"},
+          {label:"Headwind",next:"result",result:{discs:longHeadwind,reason:"Overstable fairway/driver to cut through headwind at range"}},
+          {label:"Tailwind",next:"result",result:{discs:longTailwind,reason:"Understable drivers ride the tailwind for extra distance"}},
+          {label:crossAidsLabel,next:"result",result:{discs:longCrossAids,reason:"Understable drivers ride the wind for a big turning shot"}},
+          {label:crossFightsLabel,next:"result",result:{discs:longCrossFights,reason:"Overstable fairway holds the line against crosswind push"}}
+        ]},
+        long_calm:{question:"Shot shape?",options:[
+          {label:"Straight power",next:"result",result:{discs:longCalmStraight,reason:"Reliable overstable drivers that hold a straight-to-fade line"}},
+          {label:"Hyzer bomb ("+fadeLabel+" finish)",next:"result",result:{discs:longCalmHyzer,reason:"Dependable "+fadeLabel+" fade at distance — built for spike hyzers and skip shots"}},
+          {label:"Turnover / S-curve ("+turnLabel+" finish)",next:"result",result:{discs:longCalmTurnover,reason:"Understable drivers for flex shots and "+turnLabel+"-turning S-curves"}}
+        ]},
+        max:{question:"Wind condition?",options:[
+          {label:"Calm",next:"max_calm"},
+          {label:"Headwind",next:"result",result:{discs:maxHeadwind,reason:"Maximum overstable to fight headwind at full power"}},
+          {label:"Tailwind",next:"result",result:{discs:maxTailwind,reason:"Very understable discs ride tailwind for maximum distance"}},
+          {label:crossAidsLabel,next:"result",result:{discs:maxCrossAids,reason:"Very understable — the wind extends the turn arc for huge distance"}},
+          {label:crossFightsLabel,next:"result",result:{discs:maxCrossFights,reason:"Maximum overstable to hold against crosswind push — won't turn over"}}
+        ]},
+        max_calm:{question:"Arm speed / power level?",options:[
+          {label:"High power",next:"result",result:{discs:maxCalmHigh,reason:"High-speed drivers that handle full power without turning over"}},
+          {label:"Moderate power",next:"result",result:{discs:maxCalmMod,reason:"More forgiving distance drivers that maximize glide at lower arm speeds"}}
+        ]}
+      };
+    }
+
+    function buildTreeForehand() {
+      var turnLabel = isTurnRight() ? 'right' : 'left';
+      var fadeLabel = isTurnRight() ? 'left' : 'right';
+      var crossAidsLabel = isTurnRight() ? 'Crosswind L→R (aids turn)' : 'Crosswind R→L (aids turn)';
+      var crossFightsLabel = isTurnRight() ? 'Crosswind R→L (fights turn)' : 'Crosswind L→R (fights turn)';
+
+      var shortStraight = pickDiscs(["Classic Blend Judge","Mustang"], "neutral", ["Putter","Midrange"]);
+      var shortHyzer = pickDiscs(["Mustang","Resistor"], "overstable", ["Midrange","Fairway Driver"]);
+      var shortTurnover = pickDiscs(["Colt"], "neutral", ["Putter"]);
+      var medHeadwind = pickDiscs(["Mustang","Resistor"], "overstable", ["Midrange","Fairway Driver"]);
+      var medTailwind = pickDiscs(["Volt","Mustang"], "overstable", ["Fairway Driver","Midrange"]);
+      var medCalmStraight = pickDiscs(["Mustang","Classic Blend Judge"], "overstable", ["Midrange","Putter"]);
+      var medCalmHyzer = pickDiscs(["Resistor","Mustang"], "overstable", ["Fairway Driver","Midrange"]);
+      var medCalmTurnover = pickDiscs(["Buzzz"], "understable", ["Midrange"]);
+      var medCrossAids = pickDiscs(["Volt","Mustang"], "overstable", ["Fairway Driver","Midrange"]);
+      var medCrossFights = pickDiscs(["Resistor","Mustang"], "overstable", ["Fairway Driver","Midrange"]);
+      var longHeadwind = pickDiscs(["Resistor","Wraith"], "overstable", ["Fairway Driver","Distance Driver"]);
+      var longTailwind = pickDiscs(["Volt","Wraith"], "overstable", ["Fairway Driver","Distance Driver"]);
+      var longCalmStraight = pickDiscs(["Wraith","Volt"], "overstable", ["Distance Driver","Fairway Driver"]);
+      var longCalmHyzer = pickDiscs(["Resistor","Destroyer"], "overstable", ["Fairway Driver","Distance Driver"]);
+      var longCalmTurnover = pickDiscs(["Beast","Inertia"], "understable", ["Distance Driver"]);
+      var longCrossAids = pickDiscs(["Wraith","Volt"], "overstable", ["Distance Driver","Fairway Driver"]);
+      var longCrossFights = pickDiscs(["Resistor","Wraith"], "overstable", ["Fairway Driver","Distance Driver"]);
+      var maxHeadwind = pickDiscs(["Destroyer","Photon"], "overstable", ["Distance Driver"]);
+      var maxTailwind = pickDiscs(["Wraith","Volt"], "overstable", ["Distance Driver","Fairway Driver"]);
+      var maxCalmHigh = pickDiscs(["Photon","Destroyer"], "overstable", ["Distance Driver"]);
+      var maxCalmMod = pickDiscs(["Wraith","Volt"], "overstable", ["Distance Driver","Fairway Driver"]);
+      var maxCrossAids = pickDiscs(["Wraith","Volt"], "overstable", ["Distance Driver","Fairway Driver"]);
+      var maxCrossFights = pickDiscs(["Photon","Destroyer"], "overstable", ["Distance Driver"]);
+
+      return {
+        root:{question:"What's your shot distance?",options:[
+          {label:"Short (<150 ft)",next:"short"},{label:"Medium (150–300 ft)",next:"medium"},{label:"Long (300–400 ft)",next:"long"},{label:"Max Distance (400+ ft)",next:"max"}
+        ]},
+        short:{question:"Shot shape needed? (FH)",options:[
+          {label:"Straight / Accurate",next:"result",result:{discs:shortStraight,reason:"Neutral putter or reliable OS mid for controlled forehand approach accuracy"}},
+          {label:"Hyzer (OS fade "+fadeLabel+")",next:"result",result:{discs:shortHyzer,reason:"Max OS control with hard fade "+fadeLabel+" forehand — reliable approach shots"}},
+          {label:"Turnover ("+turnLabel+")",next:"result",result:{discs:shortTurnover,reason:"Slight "+turnLabel+" turn forehand — use with careful release. Avoid very understable discs forehand."}}
+        ]},
+        medium:{question:"Wind condition?",options:[
+          {label:"Calm",next:"medium_calm"},
+          {label:"Headwind",next:"result",result:{discs:medHeadwind,reason:"Maximum forehand OS mids to cut through headwind without turning over"}},
+          {label:"Tailwind",next:"result",result:{discs:medTailwind,reason:"OS discs that won't over-fade — tailwind reduces stability so avoid US forehand"}},
+          {label:crossAidsLabel,next:"result",result:{discs:medCrossAids,reason:"OS forehand holds against crosswind — prevents forehand turnover"}},
+          {label:crossFightsLabel,next:"result",result:{discs:medCrossFights,reason:"Let OS fade work with the crosswind push for a reliable forehand finish"}}
+        ]},
+        medium_calm:{question:"Shot shape? (FH)",options:[
+          {label:"Straight",next:"result",result:{discs:medCalmStraight,reason:"Reliable OS mid or neutral putter for dead-center forehand lines"}},
+          {label:"Hyzer / "+fadeLabel+" finish",next:"result",result:{discs:medCalmHyzer,reason:"Overstable mids with dependable "+fadeLabel+"-finishing fade (forehand)"}},
+          {label:"Turnover / "+turnLabel+" finish",next:"result",result:{discs:medCalmTurnover,reason:"Use with care forehand for a controlled "+turnLabel+" turn — avoid very US forehand"}}
+        ]},
+        long:{question:"Wind condition?",options:[
+          {label:"Calm",next:"long_calm"},
+          {label:"Headwind",next:"result",result:{discs:longHeadwind,reason:"Max OS forehand drivers to cut through headwind at range"}},
+          {label:"Tailwind",next:"result",result:{discs:longTailwind,reason:"OS fairway/drivers hold forehand line in tailwind — avoid very US forehand"}},
+          {label:crossAidsLabel,next:"result",result:{discs:longCrossAids,reason:"OS forehand holds against crosswind push"}},
+          {label:crossFightsLabel,next:"result",result:{discs:longCrossFights,reason:"Max OS forehand rides the crosswind for a reliable finish"}}
+        ]},
+        long_calm:{question:"Shot shape? (FH)",options:[
+          {label:"Straight power",next:"result",result:{discs:longCalmStraight,reason:"Reliable OS forehand drivers that hold a straight-to-fade line"}},
+          {label:"Hyzer bomb ("+fadeLabel+" finish)",next:"result",result:{discs:longCalmHyzer,reason:"Dependable "+fadeLabel+" fade at distance forehand — built for spike hyzers and skip shots"}},
+          {label:"Turnover / S-curve ("+turnLabel+" finish)",next:"result",result:{discs:longCalmTurnover,reason:"Use carefully forehand — slight anhyzer release for controlled "+turnLabel+" turn. High turnover risk."}}
+        ]},
+        max:{question:"Wind condition?",options:[
+          {label:"Calm",next:"max_calm"},
+          {label:"Headwind",next:"result",result:{discs:maxHeadwind,reason:"Maximum OS forehand to fight headwind at full power"}},
+          {label:"Tailwind",next:"result",result:{discs:maxTailwind,reason:"OS forehand holds in tailwind — avoid US forehand for max distance"}},
+          {label:crossAidsLabel,next:"result",result:{discs:maxCrossAids,reason:"OS forehand holds against crosswind — won't turn over"}},
+          {label:crossFightsLabel,next:"result",result:{discs:maxCrossFights,reason:"Max OS forehand rides the crosswind for huge controlled distance"}}
+        ]},
+        max_calm:{question:"Arm speed / power level?",options:[
+          {label:"High power",next:"result",result:{discs:maxCalmHigh,reason:"Max-speed forehand drivers that handle full power without turning over"}},
+          {label:"Moderate power",next:"result",result:{discs:maxCalmMod,reason:"Reliable OS forehand drivers that maximize glide at moderate arm speeds"}}
+        ]}
+      };
+    }
+
+    function getActiveTree() { return isForehand() ? buildTreeForehand() : buildTreeBackhand(); }
+
+    let advisorPath = [];
+    let currentNode = 'root';
+    let cachedTree = null;
+
+    function getDiscByName(name) {
+      var match = name.match(/^(.+?)\s*\((\d+)g\)$/);
+      if (match) {
+        return discs.find(function(d) { return d.name === match[1] && d.weight === parseInt(match[2]); });
+      }
+      return discs.find(function(d) { return d.name === name; });
+    }
+
+    function flightPillSmall(d) {
+      return '<div class="flex gap-1 mt-1">' +
+        '<span class="inline-flex items-center justify-center w-7 h-7 rounded text-[0.65rem] font-bold text-white" style="background:#f59e0b">' + d.speed + '</span>' +
+        '<span class="inline-flex items-center justify-center w-7 h-7 rounded text-[0.65rem] font-bold text-white" style="background:#3b82f6">' + d.glide + '</span>' +
+        '<span class="inline-flex items-center justify-center w-7 h-7 rounded text-[0.65rem] font-bold text-white" style="background:#14b8a6">' + d.turn + '</span>' +
+        '<span class="inline-flex items-center justify-center w-7 h-7 rounded text-[0.65rem] font-bold text-white" style="background:#ef4444">' + d.fade + '</span>' +
+        '</div><div class="flex gap-1 mt-0.5">' +
+        '<span class="text-[0.5rem] text-ink-400 w-7 text-center">SPD</span>' +
+        '<span class="text-[0.5rem] text-ink-400 w-7 text-center">GLD</span>' +
+        '<span class="text-[0.5rem] text-ink-400 w-7 text-center">TRN</span>' +
+        '<span class="text-[0.5rem] text-ink-400 w-7 text-center">FDE</span></div>';
+    }
+
+    function getFhBadgeHtml(d) {
+      var suit = d.fhRating || calcFhRating(d.stability);
+      if (suit === 'excellent') return '<span class="fh-suitability-badge fh-badge-excellent">FH ⭐</span>';
+      if (suit === 'good') return '<span class="fh-suitability-badge fh-badge-good">FH ✅</span>';
+      if (suit === 'fair') return '<span class="fh-suitability-badge fh-badge-fair">FH ⚠️</span>';
+      return '<span class="fh-suitability-badge fh-badge-avoid">FH ❌</span>';
+    }
+
+    function getStyleBadgeHtml(d) {
+      if (isForehand()) {
+        return getFhBadgeHtml(d);
+      }
+      return '<span class="fh-suitability-badge fh-badge-good">BH ✅</span>';
+    }
+
+    function renderAdvisor() {
+      cachedTree = getActiveTree();
+      var container = document.getElementById('decision-tree');
+      var breadcrumb = document.getElementById('breadcrumb-trail');
+      var node = cachedTree[currentNode];
+
+      document.getElementById('advisor-subtitle').textContent = 'Click through the decision tree to find your disc (' + throwMode + ')';
+
+      var modeBanner = document.getElementById('advisor-mode-banner');
+      var modeBannerText = document.getElementById('advisor-mode-text');
+      if (isTurnRight()) {
+        modeBannerText.textContent = '➡️ Turn-Right Mode — disc naturally turns right, fades left';
+      } else {
+        modeBannerText.textContent = '⬅️ Turn-Left Mode — disc naturally turns left, fades right';
+      }
+      modeBanner.classList.remove('hidden');
+
+      var fhBanner = document.getElementById('fh-advisor-banner');
+      if (isForehand()) { fhBanner.classList.remove('hidden'); } else { fhBanner.classList.add('hidden'); }
+
+      var bcHtml = '';
+      advisorPath.forEach(function(step, i) {
+        bcHtml += '<span class="breadcrumb-chip">' + step.question + ' → ' + step.answer + '</span>';
+        if (i < advisorPath.length - 1) bcHtml += '<span class="text-ink-300 text-xs flex items-center">›</span>';
+      });
+      breadcrumb.innerHTML = bcHtml;
+
+      if (!node) return;
+
+      var html = '<div class="flow-node active-node w-full max-w-md text-center mb-2">' +
+        '<div class="text-xs font-semibold text-gold-600 uppercase tracking-wide mb-1">Step ' + (advisorPath.length + 1) + '</div>' +
+        '<div class="text-sm font-bold text-ink-900">' + node.question + '</div></div>' +
+        '<div class="connector-line"></div><div class="connector-arrow"></div>' +
+        '<div class="grid grid-cols-1 sm:grid-cols-2 gap-3 w-full max-w-lg mt-3">';
+
+      node.options.forEach(function(opt, i) {
+        html += '<button class="advisor-option flow-node text-center" data-index="' + i + '"><div class="text-sm font-medium text-ink-800">' + opt.label + '</div></button>';
+      });
+      html += '</div>';
+      container.innerHTML = html;
+
+      container.querySelectorAll('.advisor-option').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+          var idx = parseInt(this.dataset.index);
+          var option = node.options[idx];
+          advisorPath.push({ question: node.question, answer: option.label });
+          if (option.next === 'result' && option.result) {
+            showResult(option.result);
+          } else {
+            currentNode = option.next;
+            renderAdvisor();
+          }
+        });
+      });
+    }
+
+    function showResult(result) {
+      var container = document.getElementById('decision-tree');
+      var breadcrumb = document.getElementById('breadcrumb-trail');
+
+      var bcHtml = '';
+      advisorPath.forEach(function(step, i) {
+        bcHtml += '<span class="breadcrumb-chip">' + step.question + ' → ' + step.answer + '</span>';
+        if (i < advisorPath.length - 1) bcHtml += '<span class="text-ink-300 text-xs flex items-center">›</span>';
+      });
+      breadcrumb.innerHTML = bcHtml;
+
+      var fhSuffix = isForehand() ? ' (Forehand)' : '';
+
+      var html = '<div class="w-full max-w-lg"><div class="connector-line"></div><div class="connector-arrow"></div>' +
+        '<div class="result-card mt-3"><div class="flex items-center gap-2 mb-3">' +
+        '<div class="w-8 h-8 rounded-lg bg-forest-700 text-white flex items-center justify-center"><i data-lucide="target" class="w-4 h-4"></i></div>' +
+        '<span class="text-xs font-semibold text-forest-700 uppercase tracking-wide">Recommended Discs' + fhSuffix + '</span></div>' +
+        '<p class="text-xs text-ink-600 mb-4">' + result.reason + '</p><div class="space-y-4">';
+
+      result.discs.forEach(function(name) {
+        var d = getDiscByName(name);
+        if (!d) return;
+        var badgeClass = getTypeBadgeClass(d.type);
+        var tip = getThrowTip(d);
+        html += '<div class="flex gap-4 items-start p-3 bg-white rounded-xl border border-parchment-200">' +
+          '<span class="text-2xl mt-0.5">' + (d.photo ? '<img src="' + d.photo + '" style="width:36px;height:36px;border-radius:50%;object-fit:cover;border:1.5px solid #e5dcc8;" />' : d.icon) + '</span><div class="flex-1">' +
+          '<div class="font-bold text-sm text-ink-900">' + getDiscDisplayName(d) + '</div>' +
+          '<div class="flex items-center gap-2 mt-0.5"><span class="type-badge ' + badgeClass + '">' + d.type + '</span>' +
+          '<span class="text-[0.65rem] text-ink-400">' + d.weight + 'g</span>' +
+          getStyleBadgeHtml(d) + '</div>' +
+          flightPillSmall(d) +
+          '<p class="text-[0.7rem] text-ink-500 mt-2 italic">"' + tip + '"</p></div></div>';
+      });
+
+      html += '</div><button class="advisor-reset-btn mt-5 w-full py-2.5 bg-forest-700 text-white rounded-lg text-xs font-semibold hover:bg-forest-600 transition-colors flex items-center justify-center gap-2">' +
+        '<i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i> Start Over</button></div></div>';
+
+      container.innerHTML = html;
+      container.querySelector('.advisor-reset-btn').addEventListener('click', resetAdvisor);
+      if (typeof lucide !== "undefined" && typeof lucide.createIcons === "function") { lucide.createIcons(); }
+    }
+
+    function resetAdvisor() {
+      advisorPath = [];
+      currentNode = 'root';
+      renderAdvisor();
+    }
+
+    // ===== DISC CARDS =====
+    function getStabilityPosition(stability) {
+      var positions = { "very-understable":10, "understable":30, "neutral":50, "overstable":70, "very-overstable":90 };
+      return positions[stability] || 50;
+    }
+    function getStabilityLabel(stability) {
+      var labels = { "very-understable":"Very Understable", "understable":"Understable", "neutral":"Neutral", "overstable":"Overstable", "very-overstable":"Very Overstable" };
+      return labels[stability] || stability;
+    }
+
+    function windMiniGrid(d) {
+      var conditions = ['headwind','tailwind','crossLR','crossRL'];
+      var labelsArr;
+      var tooltips;
+      if (isTurnRight()) {
+        labelsArr = ['Head','Tail','L→R','R→L'];
+        tooltips = ['Headwind','Tailwind','Cross L→R (aids turn →)','Cross R→L (fights turn →)'];
+      } else {
+        labelsArr = ['Head','Tail','L→R','R→L'];
+        tooltips = ['Headwind','Tailwind','Cross L→R (fights turn ←)','Cross R→L (aids turn ←)'];
+      }
+      var icons = { excellent:'✅', good:'👍', fair:'⚠️', avoid:'❌' };
+      var html = '<div class="flex gap-2 justify-between">';
+      conditions.forEach(function(c, i) {
+        var r = getRating(d.stability, c, 'moderate');
+        html += '<div class="text-center" title="' + tooltips[i] + '"><div class="text-[0.6rem] font-semibold text-ink-500">' + labelsArr[i] + '</div><div class="text-sm">' + icons[r] + '</div></div>';
+      });
+      html += '</div>';
+      return html;
+    }
+
+    function updateFilterCounts() {
+      var inBag = getInBagDiscs().length;
+      var total = discs.length;
+      var outBag = total - inBag;
+      document.getElementById('filter-all-count').textContent = total;
+      document.getElementById('filter-inbag-count').textContent = inBag;
+      document.getElementById('bag-summary-text').textContent = inBag + ' in bag · ' + outBag + ' not in bag · 👤 ' + currentPlayer;
+      document.getElementById('cards-subtitle').textContent = inBag + ' in bag · ' + outBag + ' not in bag · ' + throwMode + ' · ' + currentPlayer;
+      // Type counts — respect active bag filter
+      var countSource = (cardFilter === 'inbag') ? getInBagDiscs() : discs;
+      var countDriver = countSource.filter(function(d){ return d.type === 'Distance Driver'; }).length;
+      var countFairway = countSource.filter(function(d){ return d.type === 'Fairway Driver'; }).length;
+      var countMid = countSource.filter(function(d){ return d.type === 'Midrange'; }).length;
+      var countPutter = countSource.filter(function(d){ return d.type === 'Putter'; }).length;
+      var el;
+      el = document.getElementById('filter-count-driver'); if(el) el.textContent = countDriver;
+      el = document.getElementById('filter-count-fairway'); if(el) el.textContent = countFairway;
+      el = document.getElementById('filter-count-midrange'); if(el) el.textContent = countMid;
+      el = document.getElementById('filter-count-putter'); if(el) el.textContent = countPutter;
+    }
+
+    function renderDiscCards() {
+      var grid = document.getElementById('disc-cards-grid');
+      updateFilterCounts();
+
+      var displayDiscs = [];
+      discs.forEach(function(d, idx) {
+        d._origIdx = idx;
+        displayDiscs.push(d);
+      });
+
+      if (cardFilter === 'inbag') {
+        displayDiscs = displayDiscs.filter(function(d) { return d.inbag; });
+      }
+      if (typeof selectedTypes !== 'undefined' && selectedTypes.length > 0) {
+        displayDiscs = displayDiscs.filter(function(d) { return selectedTypes.indexOf(d.type) !== -1; });
+      }
+
+      displayDiscs.sort(function(a, b) {
+        if (a.inbag && !b.inbag) return -1;
+        if (!a.inbag && b.inbag) return 1;
+        var aTypeIdx = typeOrder.indexOf(a.type);
+        var bTypeIdx = typeOrder.indexOf(b.type);
+        if (aTypeIdx !== bTypeIdx) return aTypeIdx - bTypeIdx;
+        return a._origIdx - b._origIdx;
+      });
+
+      var html = '';
+      var tipLabel = throwMode + ' Throw Tip';
+      var windLabel = 'Moderate · ' + throwMode;
+
+      displayDiscs.forEach(function(d) {
+        var idx = d._origIdx;
+        var isInBag = d.inbag;
+        var bestFor = d.bestFor || autoGenBestFor(d.stability, d.type);
+        var badgeClass = getTypeBadgeClass(d.type);
+        var stabPos = getStabilityPosition(d.stability);
+        var tip = getThrowTip(d);
+        var styleBadge = getStyleBadgeHtml(d);
+        var plasticStr = d.plastic ? ' · ' + d.plastic : '';
+        var notesHtml = d.notes ? '<div class="bg-gold-100/50 rounded-lg p-2 border border-gold-200/50 mt-1"><p class="text-[0.65rem] text-ink-600">📝 ' + d.notes + '</p></div>' : '';
+
+        var cardClass = 'disc-card' + (isInBag ? '' : ' out-of-bag');
+        var notInBagBadge = isInBag ? '' : '<div class="not-in-bag-badge">NOT IN BAG</div>';
+
+        var bagActionBtn = '';
+        if (isInBag) {
+          bagActionBtn = '<button class="disc-remove-btn no-print text-ink-300 hover:text-amber-500 p-1 rounded transition-colors" data-disc-idx="' + idx + '" title="Remove from bag"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M8 6V4a2 2 0 0 1 4 0v2"/><line x1="9" y1="14" x2="15" y2="14" stroke-width="2.5"/></svg></button>';
+        } else {
+          bagActionBtn = '<button class="add-bag-circle no-print" data-disc-idx="' + idx + '">+</button>';
+        }
+        var editBtn = '<button class="disc-edit-btn no-print text-ink-300 hover:text-blue-500 p-1 rounded transition-colors" data-disc-idx="' + idx + '" title="Edit disc"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>';
+        var deleteBtn = '<button class="disc-delete-btn no-print text-ink-300 hover:text-red-500 p-1 rounded transition-colors" data-disc-idx="' + idx + '" title="Delete permanently"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg></button>';
+        var plasticDisplay = d.plastic || '—';
+
+        html += '<div class="' + cardClass + '" data-disc-idx="' + idx + '">' +
+          notInBagBadge +
+          '<div class="p-4 pb-3 border-b border-parchment-100">' +
+            '<div class="flex items-start justify-between">' +
+              '<div class="flex items-center gap-2">' +
+              (d.photo ? '<img src="' + d.photo + '" alt="' + d.name + '" class="disc-tile-img disc-photo-popup-trigger cursor-pointer" data-photo="' + d.photo + '" data-name="' + d.name + '" data-disctype="' + d.type + '" title="Tap to view full image" />' : '<span class="text-2xl">' + d.icon + '</span>') +
+              '<div>' +
+                '<h3 class="font-bold text-base text-ink-900">' + getDiscDisplayName(d) + '</h3>' +
+                '<div class="mt-0.5"><span class="type-badge ' + badgeClass + '">' + d.type + '</span></div>' +
+                '<p class="text-[0.65rem] text-ink-500 mt-0.5">' + d.brand + ' · ' + plasticDisplay + '</p>' +
+              '</div></div>' +
+              '<div class="flex items-center gap-1">' +
+                styleBadge +
+                editBtn +
+                deleteBtn +
+                bagActionBtn +
+              '</div>' +
+            '</div>' +
+            (isInBag ? '<div class="remove-confirm hidden mt-2" id="remove-confirm-' + idx + '">' +
+              '<p class="text-xs text-ink-700 mb-2">Remove <strong>' + getDiscDisplayNamePlain(d) + '</strong> from bag?</p>' +
+              '<div class="flex gap-2"><button class="remove-yes-btn px-3 py-1 bg-amber-500 text-white rounded text-xs font-semibold" data-disc-idx="' + idx + '">Remove</button>' +
+              '<button class="remove-cancel-btn px-3 py-1 bg-parchment-200 text-ink-700 rounded text-xs font-semibold" data-disc-idx="' + idx + '">Cancel</button></div>' +
+            '</div>' : '') +
+            '<div class="delete-confirm hidden mt-2" id="delete-confirm-' + idx + '" style="background:rgba(230,57,70,0.07);border:1px solid rgba(230,57,70,0.25);border-radius:0.6rem;padding:0.6rem;">' +
+              '<p class="text-xs text-red-700 mb-2">⚠️ Permanently delete <strong>' + getDiscDisplayNamePlain(d) + '</strong>? This cannot be undone.</p>' +
+              '<div class="flex gap-2"><button class="delete-yes-btn px-3 py-1 bg-red-600 text-white rounded text-xs font-semibold" data-disc-idx="' + idx + '">Delete</button>' +
+              '<button class="delete-cancel-btn px-3 py-1 bg-parchment-200 text-ink-700 rounded text-xs font-semibold" data-disc-idx="' + idx + '">Cancel</button></div>' +
+            '</div>' +
+          '</div>' +
+          '<div class="p-4 space-y-3">' +
+            '<div><div class="flex items-center justify-between mb-1.5"><span class="text-[0.6rem] font-semibold text-ink-400 uppercase tracking-wider">Flight Numbers</span><span class="text-[0.6rem] font-semibold text-ink-500">Weight: ' + d.weight + 'g</span></div>' +
+              '<div class="flex gap-2">' +
+                '<div class="text-center"><div class="flight-box" style="background:#f59e0b">' + d.speed + '</div><div class="text-[0.55rem] text-ink-400 mt-0.5">Speed</div></div>' +
+                '<div class="text-center"><div class="flight-box" style="background:#3b82f6">' + d.glide + '</div><div class="text-[0.55rem] text-ink-400 mt-0.5">Glide</div></div>' +
+                '<div class="text-center"><div class="flight-box" style="background:#14b8a6">' + d.turn + '</div><div class="text-[0.55rem] text-ink-400 mt-0.5">Turn</div></div>' +
+                '<div class="text-center"><div class="flight-box" style="background:#ef4444">' + d.fade + '</div><div class="text-[0.55rem] text-ink-400 mt-0.5">Fade</div></div>' +
+              '</div></div>' +
+            '<div><div class="text-[0.6rem] font-semibold text-ink-400 uppercase tracking-wider mb-1.5">Stability: ' + getStabilityLabel(d.stability) + '</div>' +
+              '<div class="stability-bar"><div class="stability-marker" style="left:' + stabPos + '%"></div></div>' +
+              '<div class="flex justify-between mt-1"><span class="text-[0.5rem] text-ink-300">Very US</span><span class="text-[0.5rem] text-ink-300">Very OS</span></div></div>' +
+            '<div><div class="text-[0.6rem] font-semibold text-ink-400 uppercase tracking-wider mb-1.5">Wind Performance (' + windLabel + ')</div>' + windMiniGrid(d) + '</div>' +
+            '<div><div class="text-[0.6rem] font-semibold text-ink-400 uppercase tracking-wider mb-1">Best For</div>' +
+              '<ul class="space-y-0.5">' + bestFor.map(function(b) { return '<li class="text-xs text-ink-700 flex items-start gap-1.5"><span class="text-forest-500 mt-0.5 flex-shrink-0">•</span> ' + b + '</li>'; }).join('') + '</ul></div>' +
+            '<div class="bg-parchment-50 rounded-lg p-2.5 border border-parchment-100">' +
+              '<div class="text-[0.6rem] font-semibold text-gold-600 uppercase tracking-wider mb-0.5 flex items-center gap-1"><i data-lucide="lightbulb" class="w-3 h-3"></i> ' + tipLabel + '</div>' +
+              '<p class="text-xs text-ink-700 italic">"' + tip + '"</p></div>' +
+            notesHtml +
+          '</div></div>';
+      });
+
+      grid.innerHTML = html;
+      bindDiscCardEvents();
+    }
+
+    function bindDiscCardEvents() {
+      // Disc photo popup — click circular photo to enlarge
+      document.querySelectorAll('.disc-photo-popup-trigger').forEach(function(img) {
+        img.addEventListener('click', function(e) {
+          e.stopPropagation();
+          document.getElementById('disc-photo-popup-img').src = this.getAttribute('data-photo');
+          document.getElementById('disc-photo-popup-name').textContent = this.getAttribute('data-name');
+          document.getElementById('disc-photo-popup-type').textContent = this.getAttribute('data-disctype');
+          document.getElementById('modal-disc-photo').classList.remove('hidden');
+        });
+      });
+
+      // Remove from bag
+      document.querySelectorAll('.disc-remove-btn').forEach(function(btn) {
+        btn.addEventListener('click', function(e) {
+          e.stopPropagation();
+          var idx = parseInt(this.dataset.discIdx);
+          // Hide delete confirm if open
+          var dc = document.getElementById('delete-confirm-' + idx);
+          if (dc) dc.classList.add('hidden');
+          var rc = document.getElementById('remove-confirm-' + idx);
+          if (rc) rc.classList.toggle('hidden');
+        });
+      });
+      document.querySelectorAll('.remove-cancel-btn').forEach(function(btn) {
+        btn.addEventListener('click', function(e) {
+          e.stopPropagation();
+          var idx = parseInt(this.dataset.discIdx);
+          var rc = document.getElementById('remove-confirm-' + idx);
+          if (rc) rc.classList.add('hidden');
+        });
+      });
+      document.querySelectorAll('.remove-yes-btn').forEach(function(btn) {
+        btn.addEventListener('click', function(e) {
+          e.stopPropagation();
+          var idx = parseInt(this.dataset.discIdx);
+          var removedName = getDiscDisplayNamePlain(discs[idx]);
+          discs[idx].inbag = false;
+          saveDiscsToStorage();
+          renderDiscCards(); renderWindMatrix(); renderCheatSheet();
+          showToast('📤 ' + removedName + ' removed from bag', 'info');
+          if (typeof lucide !== 'undefined') lucide.createIcons();
+        });
+      });
+
+      // Add to bag
+      document.querySelectorAll('.add-bag-circle').forEach(function(btn) {
+        btn.addEventListener('click', function(e) {
+          e.stopPropagation();
+          var idx = parseInt(this.dataset.discIdx);
+          var addedName = getDiscDisplayNamePlain(discs[idx]);
+          discs[idx].inbag = true;
+          saveDiscsToStorage();
+          renderDiscCards(); renderWindMatrix(); renderCheatSheet();
+          showToast('✅ ' + addedName + ' added to bag!', 'success');
+          if (typeof lucide !== 'undefined') lucide.createIcons();
+        });
+      });
+
+      // Edit disc
+      document.querySelectorAll('.disc-edit-btn').forEach(function(btn) {
+        btn.addEventListener('click', function(e) {
+          e.stopPropagation();
+          var idx = parseInt(this.dataset.discIdx);
+          var d = discs[idx];
+          document.getElementById('edit-disc-idx').value = idx;
+          document.getElementById('edit-name').value = d.name || '';
+          document.getElementById('edit-brand').value = d.brand || '';
+          document.getElementById('edit-plastic').value = d.plastic || '';
+          populateMfrDatalist('mfr-list-edit');
+          updatePlasticDatalist(d.brand || '', 'plastic-list-edit');
+          document.getElementById('edit-type').value = d.type || 'Distance Driver';
+          document.getElementById('edit-weight').value = d.weight || 170;
+          document.getElementById('edit-speed').value = d.speed || '';
+          document.getElementById('edit-glide').value = d.glide || '';
+          document.getElementById('edit-turn').value = d.turn !== undefined ? d.turn : '';
+          document.getElementById('edit-fade').value = d.fade !== undefined ? d.fade : '';
+          document.getElementById('edit-notes').value = d.notes || '';
+          // Pre-populate photo if disc has one
+          var editImgPreview = document.getElementById('edit-img-preview');
+          var editImgPlaceholder = document.getElementById('edit-img-placeholder');
+          var editImgClear = document.getElementById('edit-img-clear');
+          var editImgData = document.getElementById('edit-img-data');
+          var editImgInput = document.getElementById('edit-img-input');
+          if (editImgData) { editImgData.value = ''; editImgData.setAttribute('data-cleared', 'false'); }
+          if (editImgInput) editImgInput.value = '';
+          if (d.photo && editImgPreview) {
+            editImgPreview.src = d.photo;
+            editImgPreview.classList.remove('hidden');
+            if (editImgPlaceholder) editImgPlaceholder.classList.add('hidden');
+            if (editImgClear) editImgClear.classList.remove('hidden');
+          } else {
+            if (editImgPreview) { editImgPreview.src = ''; editImgPreview.classList.add('hidden'); }
+            if (editImgPlaceholder) editImgPlaceholder.classList.remove('hidden');
+            if (editImgClear) editImgClear.classList.add('hidden');
+          }
+          var titleEl = document.getElementById('edit-modal-title');
+          if (titleEl) titleEl.textContent = '✏️ Edit Disc — ' + getDiscDisplayNamePlain(d);
+          openModal('modal-edit-disc');
+        });
+      });
+
+      // Delete permanently
+      document.querySelectorAll('.disc-delete-btn').forEach(function(btn) {
+        btn.addEventListener('click', function(e) {
+          e.stopPropagation();
+          var idx = parseInt(this.dataset.discIdx);
+          // Hide remove confirm if open
+          var rc = document.getElementById('remove-confirm-' + idx);
+          if (rc) rc.classList.add('hidden');
+          var dc = document.getElementById('delete-confirm-' + idx);
+          if (dc) dc.classList.toggle('hidden');
+        });
+      });
+      document.querySelectorAll('.delete-cancel-btn').forEach(function(btn) {
+        btn.addEventListener('click', function(e) {
+          e.stopPropagation();
+          var idx = parseInt(this.dataset.discIdx);
+          var dc = document.getElementById('delete-confirm-' + idx);
+          if (dc) dc.classList.add('hidden');
+        });
+      });
+      document.querySelectorAll('.delete-yes-btn').forEach(function(btn) {
+        btn.addEventListener('click', function(e) {
+          e.stopPropagation();
+          var idx = parseInt(this.dataset.discIdx);
+          var deletedName = getDiscDisplayNamePlain(discs[idx]);
+          discs.splice(idx, 1);
+          saveDiscsToStorage();
+          renderAll();
+          showToast('🗑️ ' + deletedName + ' permanently deleted', 'warning');
+        });
+      });
+
+      if (typeof lucide !== 'undefined') lucide.createIcons();
+    }
+
+    // ===== FILTER TOGGLE =====
+    document.getElementById('filter-all').addEventListener('click', function() {
+      cardFilter = 'all';
+      document.getElementById('filter-all').classList.add('active-filter');
+      document.getElementById('filter-inbag').classList.remove('active-filter');
+      renderDiscCards();
+    });
+    document.getElementById('filter-inbag').addEventListener('click', function() {
+      cardFilter = 'inbag';
+      document.getElementById('filter-inbag').classList.add('active-filter');
+      document.getElementById('filter-all').classList.remove('active-filter');
+      renderDiscCards();
+    });
+    // cardTypeFilter is initialized in the persistence section above
+
+    // ===== MODALS =====
+    function openModal(id) { document.getElementById(id).classList.add('show'); }
+    function closeModal(id) { document.getElementById(id).classList.remove('show'); }
+
+    // ---- Shared image compression utility ----
+    // Resizes photo to max 320px and encodes as JPEG ~30-50KB, well within localStorage limits
+    function compressDiscImage(file, callback) {
+      var reader = new FileReader();
+      reader.onload = function(e) {
+        var img = new Image();
+        img.onload = function() {
+          var MAX = 320;
+          var scale = Math.min(MAX / img.width, MAX / img.height, 1);
+          var w = Math.round(img.width * scale);
+          var h = Math.round(img.height * scale);
+          var canvas = document.createElement('canvas');
+          canvas.width = w; canvas.height = h;
+          canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+          callback(canvas.toDataURL('image/jpeg', 0.78));
+        };
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    // Add disc image upload handler
+    (function() {
+      var input = document.getElementById('add-img-input');
+      var preview = document.getElementById('add-img-preview');
+      var placeholder = document.getElementById('add-img-placeholder');
+      var clearBtn = document.getElementById('add-img-clear');
+      var dataField = document.getElementById('add-img-data');
+      if (!input) return;
+      input.addEventListener('change', function() {
+        var file = input.files[0];
+        if (!file) return;
+        compressDiscImage(file, function(compressed) {
+          dataField.value = compressed;
+          preview.src = compressed;
+          preview.classList.remove('hidden');
+          placeholder.classList.add('hidden');
+          clearBtn.classList.remove('hidden');
+        });
+      });
+      clearBtn.addEventListener('click', function() {
+        dataField.value = '';
+        preview.src = '';
+        preview.classList.add('hidden');
+        placeholder.classList.remove('hidden');
+        clearBtn.classList.add('hidden');
+        input.value = '';
+      });
+    })();
+
+    // ---- Backup / Restore handlers ----
+    document.getElementById('btn-export-bag').addEventListener('click', function() {
+      try {
+        var backup = { player: currentPlayer, discs: discs, version: 1, exported: new Date().toISOString() };
+        var blob = new Blob([JSON.stringify(backup, null, 2)], { type: 'application/json' });
+        var url = URL.createObjectURL(blob);
+        var a = document.createElement('a'); a.href = url;
+        a.download = 'disc-bag-backup-' + currentPlayer.replace(/\s+/g,'-') + '-' + new Date().toISOString().slice(0,10) + '.json';
+        document.body.appendChild(a); a.click(); document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        showToast('✅ Backup downloaded!', 'success');
+      } catch(e) { showToast('❌ Export failed: ' + e.message, 'error'); }
+    });
+
+    document.getElementById('import-bag-input').addEventListener('change', function() {
+      var file = this.files[0]; if (!file) return;
+      var reader = new FileReader();
+      reader.onload = function(e) {
+        try {
+          var backup = JSON.parse(e.target.result);
+          if (!backup.discs || !Array.isArray(backup.discs)) throw new Error('Invalid backup file');
+          if (!confirm('Restore ' + backup.discs.length + ' discs for ' + (backup.player || 'player') + '? This will replace your current bag.')) return;
+          discs = backup.discs;
+          saveDiscsToStorage();
+          renderAll();
+          showToast('✅ ' + discs.length + ' discs restored!', 'success');
+        } catch(err) { showToast('❌ Restore failed: ' + err.message, 'error'); }
+      };
+      reader.readAsText(file);
+      this.value = '';
+    });
+
+    document.getElementById('btn-add-disc').addEventListener('click', function() {
+      document.getElementById('add-name').value = '';
+      document.getElementById('add-brand').value = '';
+      document.getElementById('add-plastic').value = '';
+      populateMfrDatalist('mfr-list-add');
+      updatePlasticDatalist('', 'plastic-list-add');
+      document.getElementById('add-type').value = 'Distance Driver';
+      document.getElementById('add-weight').value = '170';
+      document.getElementById('add-icon').value = '🥏';
+      // Reset image fields
+      var addImgData = document.getElementById('add-img-data');
+      var addImgPreview = document.getElementById('add-img-preview');
+      var addImgPlaceholder = document.getElementById('add-img-placeholder');
+      var addImgClear = document.getElementById('add-img-clear');
+      var addImgInput = document.getElementById('add-img-input');
+      if (addImgData) addImgData.value = '';
+      if (addImgPreview) { addImgPreview.src = ''; addImgPreview.classList.add('hidden'); }
+      if (addImgPlaceholder) addImgPlaceholder.classList.remove('hidden');
+      if (addImgClear) addImgClear.classList.add('hidden');
+      if (addImgInput) addImgInput.value = '';
+      document.getElementById('add-speed').value = '';
+      document.getElementById('add-glide').value = '';
+      document.getElementById('add-turn').value = '';
+      document.getElementById('add-fade').value = '';
+      document.getElementById('add-notes').value = '';
+      document.getElementById('add-inbag').checked = true;
+      openModal('modal-add-disc');
+    });
+
+    document.getElementById('add-disc-cancel').addEventListener('click', function() { closeModal('modal-add-disc'); });
+
+    // Manufacturer → auto-populate plastics datalist
+    document.getElementById('add-brand').addEventListener('input', function() {
+      updatePlasticDatalist(this.value.trim(), 'plastic-list-add');
+      document.getElementById('add-plastic').value = '';
+      document.getElementById('add-plastic').placeholder = PLASTICS_DATA[this.value.trim()] ? 'Select plastic...' : 'e.g. Star';
+    });
+    document.getElementById('edit-brand').addEventListener('input', function() {
+      updatePlasticDatalist(this.value.trim(), 'plastic-list-edit');
+      document.getElementById('edit-plastic').placeholder = PLASTICS_DATA[this.value.trim()] ? 'Select plastic...' : 'e.g. Star';
+    });
+    document.getElementById('modal-add-disc').addEventListener('click', function(e) { if (e.target === this) closeModal('modal-add-disc'); });
+
+    document.getElementById('add-disc-submit').addEventListener('click', function() {
+      var name = document.getElementById('add-name').value.trim();
+      var brand = document.getElementById('add-brand').value.trim();
+      var plastic = document.getElementById('add-plastic').value.trim();
+      var type = document.getElementById('add-type').value;
+      var weight = parseInt(document.getElementById('add-weight').value) || 170;
+      var icon = document.getElementById('add-icon').value.trim() || '🥏';
+      var speed = parseFloat(document.getElementById('add-speed').value);
+      var glide = parseFloat(document.getElementById('add-glide').value);
+      var turn = parseFloat(document.getElementById('add-turn').value);
+      var fade = parseFloat(document.getElementById('add-fade').value);
+      var notes = document.getElementById('add-notes').value.trim();
+      var inbag = document.getElementById('add-inbag').checked;
+
+      if (!name || !brand || !type || isNaN(speed) || isNaN(glide) || isNaN(turn) || isNaN(fade)) {
+        showToast('⚠️ Please fill in all required fields', 'warning');
+        return;
+      }
+
+      var stability = calcStability(turn, fade);
+      var fhRating = calcFhRating(stability);
+      var bestFor = autoGenBestFor(stability, type);
+      var tip_bh = autoGenTipBH(stability, name);
+      var tip_fh = autoGenTipFH(stability, name);
+
+      var photoData = document.getElementById('add-img-data') ? document.getElementById('add-img-data').value : '';
+      var newDisc = {
+        name: name, weight: weight, brand: brand, plastic: plastic, type: type,
+        speed: speed, glide: glide, turn: turn, fade: fade,
+        stability: stability, icon: icon, fhRating: fhRating,
+        bestFor: bestFor, tip_bh: tip_bh, tip_fh: tip_fh, inbag: inbag
+      };
+      if (notes) newDisc.notes = notes;
+      if (photoData) newDisc.photo = photoData;
+
+      discs.push(newDisc);
+      saveDiscsToStorage();
+      closeModal('modal-add-disc');
+      renderAll();
+      showToast('✅ ' + name + (inbag ? ' added to bag!' : ' saved (not in bag)'), 'success');
+    });
+
+    // Import CSV Modal
+    var csvParsedData = null;
+
+    document.getElementById('btn-import-csv').addEventListener('click', function() {
+      csvParsedData = null;
+      document.getElementById('csv-file-name').classList.add('hidden');
+      document.getElementById('csv-preview-count').classList.add('hidden');
+      document.getElementById('csv-import-submit').disabled = true;
+      document.getElementById('csv-file-input').value = '';
+      openModal('modal-import-csv');
+    });
+
+    document.getElementById('csv-import-cancel').addEventListener('click', function() { closeModal('modal-import-csv'); });
+    document.getElementById('modal-import-csv').addEventListener('click', function(e) { if (e.target === this) closeModal('modal-import-csv'); });
+    document.getElementById('btn-modal-csv-template').addEventListener('click', function() {
+      document.getElementById('btn-download-csv-template').click();
+    });
+
+    var dropZone = document.getElementById('csv-drop-zone');
+    dropZone.addEventListener('click', function() { document.getElementById('csv-file-input').click(); });
+    dropZone.addEventListener('dragover', function(e) { e.preventDefault(); this.classList.add('dragover'); });
+    dropZone.addEventListener('dragleave', function() { this.classList.remove('dragover'); });
+    dropZone.addEventListener('drop', function(e) {
+      e.preventDefault();
+      this.classList.remove('dragover');
+      if (e.dataTransfer.files.length > 0) handleCSVFile(e.dataTransfer.files[0]);
+    });
+    document.getElementById('csv-file-input').addEventListener('change', function() {
+      if (this.files.length > 0) handleCSVFile(this.files[0]);
+    });
+
+    function parseCSV(text) {
+      var lines = text.split(/\r?\n/);
+      if (lines.length < 2) return [];
+      var headers = parseCSVLine(lines[0]).map(function(h) { return h.toLowerCase().trim(); });
+      var rows = [];
+      for (var i = 1; i < lines.length; i++) {
+        if (!lines[i].trim()) continue;
+        var values = parseCSVLine(lines[i]);
+        var row = {};
+        headers.forEach(function(h, idx) { row[h] = (values[idx] || '').trim(); });
+        rows.push(row);
+      }
+      return rows;
+    }
+
+    function parseCSVLine(line) {
+      var result = []; var current = ''; var inQuotes = false;
+      for (var i = 0; i < line.length; i++) {
+        var ch = line[i];
+        if (inQuotes) {
+          if (ch === '"' && i + 1 < line.length && line[i+1] === '"') { current += '"'; i++; }
+          else if (ch === '"') { inQuotes = false; }
+          else { current += ch; }
+        } else {
+          if (ch === '"') { inQuotes = true; }
+          else if (ch === ',') { result.push(current); current = ''; }
+          else { current += ch; }
+        }
+      }
+      result.push(current);
+      return result;
+    }
+
+    function mapDiscType(raw) {
+      if (!raw) return 'Distance Driver';
+      var l = raw.toLowerCase().trim();
+      if (l.indexOf('distance') !== -1) return 'Distance Driver';
+      if (l.indexOf('fairway') !== -1) return 'Fairway Driver';
+      if (l.indexOf('midrange') !== -1 || l.indexOf('mid') !== -1) return 'Midrange';
+      if (l.indexOf('putter') !== -1 || l.indexOf('putt') !== -1) return 'Putter';
+      if (l.indexOf('driver') !== -1) return 'Distance Driver';
+      return 'Distance Driver';
+    }
+
+    function autoIcon(type) {
+      if (type === 'Distance Driver') return '🚀';
+      if (type === 'Fairway Driver') return '🌬️';
+      if (type === 'Midrange') return '🎯';
+      return '⚖️';
+    }
+
+    function handleCSVFile(file) {
+      document.getElementById('csv-file-name').textContent = '📄 ' + file.name;
+      document.getElementById('csv-file-name').classList.remove('hidden');
+
+      var reader = new FileReader();
+      reader.onload = function(e) {
+        var rows = parseCSV(e.target.result);
+        var imported = [];
+        rows.forEach(function(row) {
+          var name = row.name || row.disc || '';
+          if (!name) return;
+
+          var brand = row.manufacturer || row.brand || row.company || '';
+          var plastic = row.plastic || row.material || '';
+          var type = mapDiscType(row.type || row.category || '');
+          var speed = parseFloat(row.speed) || 7;
+          var glide = parseFloat(row.glide) || 5;
+          var turn = parseFloat(row.turn) || 0;
+          var fade = parseFloat(row.fade) || 2;
+          var weight = parseInt(row.weight) || 170;
+
+          var inbagRaw = (row.inbag || row['in bag'] || row['in_bag'] || '').toLowerCase().trim();
+          var inbag = (inbagRaw === 'yes' || inbagRaw === 'true' || inbagRaw === '1');
+
+          var stability = calcStability(turn, fade);
+          var fhRating = calcFhRating(stability);
+
+          imported.push({
+            name: name, weight: weight, brand: brand, plastic: plastic, type: type,
+            speed: speed, glide: glide, turn: turn, fade: fade,
+            stability: stability, icon: autoIcon(type), fhRating: fhRating,
+            bestFor: autoGenBestFor(stability, type),
+            tip_bh: autoGenTipBH(stability, name),
+            tip_fh: autoGenTipFH(stability, name),
+            inbag: inbag
+          });
+        });
+
+        csvParsedData = imported;
+        if (imported.length > 0) {
+          var inBagCount = imported.filter(function(d) { return d.inbag; }).length;
+          var outBagCount = imported.length - inBagCount;
+          document.getElementById('csv-preview-count').textContent = 'Found ' + imported.length + ' discs (' + inBagCount + ' in bag, ' + outBagCount + ' not in bag). Ready to import!';
+          document.getElementById('csv-preview-count').classList.remove('hidden');
+          document.getElementById('csv-import-submit').disabled = false;
+        } else {
+          document.getElementById('csv-preview-count').textContent = 'No discs found. Check your CSV format.';
+          document.getElementById('csv-preview-count').classList.remove('hidden');
+          document.getElementById('csv-import-submit').disabled = true;
+        }
+      };
+      reader.readAsText(file);
+    }
+
+    document.getElementById('csv-import-submit').addEventListener('click', function() {
+      if (!csvParsedData || csvParsedData.length === 0) return;
+
+      var mode = document.querySelector('input[name="import-mode"]:checked').value;
+      if (mode === 'replace') {
+        discs = csvParsedData;
+      } else {
+        csvParsedData.forEach(function(d) {
+          var exists = discs.some(function(existing) {
+            return existing.name.toLowerCase() === d.name.toLowerCase() && existing.weight === d.weight;
+          });
+          if (!exists) discs.push(d);
+        });
+      }
+
+      saveDiscsToStorage();
+      closeModal('modal-import-csv');
+      renderAll();
+      var inBagCount = csvParsedData.filter(function(d) { return d.inbag; }).length;
+      showToast('✅ ' + csvParsedData.length + ' discs imported (' + inBagCount + ' in bag)!', 'success');
+      csvParsedData = null;
+    });
+
+    // Reset bag
+    document.getElementById('btn-reset-bag').addEventListener('click', function() {
+      if (confirm('This will restore your original bag — 18 discs active, 10 grayed out. Any manually added discs will be removed. Continue?')) {
+        discs = JSON.parse(JSON.stringify(defaultDiscs));
+        saveDiscsToStorage();
+        renderAll();
+        showToast('↺ Bag reset to defaults (18 in bag, 10 not in bag)', 'info');
+      }
+    });
+
+    // ===== TAB SWITCHING =====
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-content').forEach(function(c) { c.classList.remove('active'); });
+      document.querySelectorAll('.tab-btn-nav').forEach(function(b) {
+        b.classList.remove('active');
+        b.classList.remove('text-ink-900');
+        b.classList.add('text-ink-500');
+      });
+      var target = document.getElementById('tab-' + tabId);
+      if (target) target.classList.add('active');
+      document.querySelectorAll('.tab-btn-nav[data-tab="' + tabId + '"]').forEach(function(b) {
+        b.classList.add('active');
+        b.classList.remove('text-ink-500');
+        b.classList.add('text-ink-900');
+      });
+      document.getElementById('mobile-menu').classList.add('hidden');
+    }
+
+    // ===== RENDER ALL =====
+    function renderAll() {
+      renderWindMatrix();
+      renderCheatSheet();
+      resetAdvisor();
+      renderDiscCards();
+      document.getElementById('footer-mode-label').textContent = throwMode;
+      if (typeof lucide !== "undefined" && typeof lucide.createIcons === "function") { lucide.createIcons(); }
+    }
+
+    // ===== HAND + STYLE TOGGLE =====
+    function updateThrowMode() {
+      var hand = document.getElementById('btn-right').classList.contains('hs-active') ? 'R' : 'L';
+      var style = document.getElementById('btn-backhand').classList.contains('hs-active') ? 'H' : 'F';
+      throwMode = hand + 'H' + (style === 'H' ? 'BH' : 'FH');
+
+
+      renderAll();
+    }
+
+    document.getElementById('btn-right').addEventListener('click', function() {
+      document.getElementById('btn-right').classList.add('hs-active');
+      document.getElementById('btn-left').classList.remove('hs-active');
+      updateThrowMode();
+    });
+    document.getElementById('btn-left').addEventListener('click', function() {
+      document.getElementById('btn-left').classList.add('hs-active');
+      document.getElementById('btn-right').classList.remove('hs-active');
+      updateThrowMode();
+    });
+    document.getElementById('btn-backhand').addEventListener('click', function() {
+      document.getElementById('btn-backhand').classList.add('hs-active');
+      document.getElementById('btn-forehand').classList.remove('hs-active');
+      updateThrowMode();
+    });
+    document.getElementById('btn-forehand').addEventListener('click', function() {
+      document.getElementById('btn-forehand').classList.add('hs-active');
+      document.getElementById('btn-backhand').classList.remove('hs-active');
+      updateThrowMode();
+    });
+
+    // ===== INIT =====
+    if (typeof lucide !== "undefined" && typeof lucide.createIcons === "function") { lucide.createIcons(); }
+
+    document.querySelectorAll('.tab-btn-nav, .mobile-nav-btn').forEach(function(btn) {
+      btn.addEventListener('click', function() { switchTab(this.dataset.tab); });
+    });
+
+    document.getElementById('mobile-menu-btn').addEventListener('click', function() {
+      document.getElementById('mobile-menu').classList.remove('hidden');
+    });
+    document.getElementById('mobile-menu-close').addEventListener('click', function() {
+      document.getElementById('mobile-menu').classList.add('hidden');
+    });
+
+    document.querySelectorAll('.wind-toggle-btn').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        document.querySelectorAll('.wind-toggle-btn').forEach(function(b) { b.classList.remove('active'); b.classList.add('text-ink-600'); });
+        this.classList.add('active'); this.classList.remove('text-ink-600');
+        currentStrength = this.dataset.strength;
+        renderWindMatrix();
+        renderCheatSheet();
+      });
+    });
+
+    document.getElementById('advisor-reset').addEventListener('click', resetAdvisor);
+
+    document.getElementById('print-cards').addEventListener('click', function() {
+      switchTab('cards');
+      setTimeout(function() { window.print(); }, 200);
+    });
+
+    // ===== CSV TEMPLATE DOWNLOAD =====
+    document.getElementById('btn-download-csv-template').addEventListener('click', function() {
+      var headers = 'name,manufacturer,plastic,type,speed,glide,turn,fade,weight,inbag,notes';
+      var example = 'My Disc,Innova,Star,Distance Driver,10,5,-2,2,175,Yes,Great in wind';
+      var csvContent = headers + '\n' + example + '\n';
+      var blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      var url = URL.createObjectURL(blob);
+      var link = document.createElement('a');
+      link.setAttribute('href', url);
+      link.setAttribute('download', 'disc_bag_template.csv');
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+      showToast('📥 CSV template downloaded! Fill it in and import.', 'success');
+    });
+
+    // ===== PLAYER SELECT HANDLER =====
+    ['player-select', 'player-select-desktop'].forEach(function(selId) {
+      var selEl = document.getElementById(selId);
+      if (!selEl) return;
+      selEl.addEventListener('change', function() {
+        // sync sibling select
+        var otherId = selId === 'player-select' ? 'player-select-desktop' : 'player-select';
+        var other = document.getElementById(otherId);
+        if (other) other.value = this.value;
+        var val = this.value;
+        if (val === '__new__') {
+          var newName = prompt('Enter new player name:');
+          if (newName && newName.trim()) {
+            var profiles = getProfiles();
+            newName = newName.trim();
+            if (profiles.indexOf(newName) === -1) {
+              profiles.push(newName);
+              localStorage.setItem('dg_profiles', JSON.stringify(profiles));
+            }
+            currentPlayer = newName;
+            localStorage.setItem('dg_current_player', currentPlayer);
+            loadPlayerDiscs();
+            populatePlayerSelect();
+            renderAll();
+          } else {
+            populatePlayerSelect();
+          }
+        } else {
+          currentPlayer = val;
+          localStorage.setItem('dg_current_player', currentPlayer);
+          loadPlayerDiscs();
+          renderAll();
+        }
+      });
+    });;
+
+    // ===== TYPE FILTER — HAMBURGER CHECKBOX DROPDOWN =====
+    // cardTypeFilter is now an array of selected types; empty = all
+    var selectedTypes = []; // empty means "all types"
+
+    function getTypeFilterLabel() {
+      if (selectedTypes.length === 0) return 'Types';
+      if (selectedTypes.length === 1) return selectedTypes[0].replace(' Driver','');
+      return selectedTypes.length + ' Types';
+    }
+
+    function updateTypeFilterBtn() {
+      var label = document.getElementById('type-filter-label');
+      if (label) label.textContent = getTypeFilterLabel();
+      var btn = document.getElementById('type-filter-btn');
+      if (btn) {
+        if (selectedTypes.length > 0) {
+          btn.classList.add('active-filter');
+        } else {
+          btn.classList.remove('active-filter');
+        }
+      }
+    }
+
+    // Toggle dropdown open/close
+    document.getElementById('type-filter-btn').addEventListener('click', function(e) {
+      e.stopPropagation();
+      var dd = document.getElementById('type-filter-dropdown');
+      dd.classList.toggle('hidden');
+    });
+
+    // Close dropdown when clicking outside
+    document.addEventListener('click', function(e) {
+      var wrapper = document.getElementById('type-filter-wrapper');
+      if (wrapper && !wrapper.contains(e.target)) {
+        document.getElementById('type-filter-dropdown').classList.add('hidden');
+      }
+    });
+
+    // Checkbox change handlers
+    ['chk-driver','chk-fairway','chk-midrange','chk-putter'].forEach(function(id) {
+      var el = document.getElementById(id);
+      if (!el) return;
+      el.addEventListener('change', function() {
+        var val = this.value;
+        if (this.checked) {
+          if (selectedTypes.indexOf(val) === -1) selectedTypes.push(val);
+        } else {
+          selectedTypes = selectedTypes.filter(function(t) { return t !== val; });
+        }
+        updateTypeFilterBtn();
+        renderDiscCards();
+      });
+    });
+
+    // Clear All button
+    document.getElementById('type-filter-clear').addEventListener('click', function() {
+      selectedTypes = [];
+      ['chk-driver','chk-fairway','chk-midrange','chk-putter'].forEach(function(id) {
+        var el = document.getElementById(id);
+        if (el) el.checked = false;
+      });
+      updateTypeFilterBtn();
+      renderDiscCards();
+    });
+
+    // ===== EDIT DISC MODAL =====
+    // Edit disc image upload handler
+    (function() {
+      var input = document.getElementById('edit-img-input');
+      var preview = document.getElementById('edit-img-preview');
+      var placeholder = document.getElementById('edit-img-placeholder');
+      var clearBtn = document.getElementById('edit-img-clear');
+      var dataField = document.getElementById('edit-img-data');
+      if (!input) return;
+      input.addEventListener('change', function() {
+        var file = input.files[0];
+        if (!file) return;
+        var reader = new FileReader();
+        reader.onload = function(e) {
+          dataField.value = e.target.result;
+          preview.src = e.target.result;
+          preview.classList.remove('hidden');
+          placeholder.classList.add('hidden');
+          clearBtn.classList.remove('hidden');
+        };
+        reader.readAsDataURL(file);
+      });
+      clearBtn.addEventListener('click', function() {
+        dataField.value = '';
+        dataField.setAttribute('data-cleared', 'true');
+        preview.src = '';
+        preview.classList.add('hidden');
+        placeholder.classList.remove('hidden');
+        clearBtn.classList.add('hidden');
+        input.value = '';
+      });
+    })();
+
+    document.getElementById('edit-disc-cancel').addEventListener('click', function() { closeModal('modal-edit-disc'); });
+    document.getElementById('modal-edit-disc').addEventListener('click', function(e) { if (e.target === this) closeModal('modal-edit-disc'); });
+
+    document.getElementById('edit-disc-submit').addEventListener('click', function() {
+      var idx = parseInt(document.getElementById('edit-disc-idx').value);
+      var editImgField = document.getElementById('edit-img-data');
+      var editPhotoData = editImgField ? editImgField.value : '';
+      // Fallback: if hidden field empty but preview has a src, use preview src
+      if (!editPhotoData) {
+        var editPrev = document.getElementById('edit-img-preview');
+        if (editPrev && !editPrev.classList.contains('hidden') && editPrev.src && editPrev.src !== window.location.href) {
+          editPhotoData = editPrev.src;
+        }
+      }
+      var d = discs[idx];
+      if (!d) return;
+      var name = document.getElementById('edit-name').value.trim();
+      var brand = document.getElementById('edit-brand').value.trim();
+      var plastic = document.getElementById('edit-plastic').value.trim();
+      var type = document.getElementById('edit-type').value;
+      var weight = parseInt(document.getElementById('edit-weight').value) || d.weight;
+      var speed = parseFloat(document.getElementById('edit-speed').value);
+      var glide = parseFloat(document.getElementById('edit-glide').value);
+      var turn = parseFloat(document.getElementById('edit-turn').value);
+      var fade = parseFloat(document.getElementById('edit-fade').value);
+      var notes = document.getElementById('edit-notes').value.trim();
+
+      if (!name || !brand || !type || isNaN(speed) || isNaN(glide) || isNaN(turn) || isNaN(fade)) {
+        showToast('⚠️ Please fill in all required fields', 'warning');
+        return;
+      }
+
+      d.name = name;
+      d.brand = brand;
+      d.plastic = plastic;
+      d.type = type;
+      d.weight = weight;
+      d.speed = speed;
+      d.glide = glide;
+      d.turn = turn;
+      d.fade = fade;
+      d.stability = calcStability(turn, fade);
+      d.fhRating = calcFhRating(d.stability);
+      d.bestFor = autoGenBestFor(d.stability, type);
+      d.tip_bh = autoGenTipBH(d.stability, name);
+      d.tip_fh = autoGenTipFH(d.stability, name);
+      if (notes) { d.notes = notes; } else { delete d.notes; }
+      // Save photo: if new photo selected use it; if cleared, remove it; otherwise keep existing
+      if (editPhotoData) {
+        d.photo = editPhotoData;
+      } else if (document.getElementById('edit-img-data') && document.getElementById('edit-img-data').getAttribute('data-cleared') === 'true') {
+        delete d.photo;
+      }
+
+      saveDiscsToStorage();
+      closeModal('modal-edit-disc');
+      renderAll();
+      showToast('✏️ ' + d.name + ' updated!', 'success');
+    });
+
+
+    // ================================================================
+    // IN-APP CIRCULAR CAMERA
+    // ================================================================
+    var _cameraStream = null;
+    var _cameraTarget = 'add';
+
+    function openCircularCamera(target) {
+      _cameraTarget = target;
+      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        document.getElementById(target === 'add' ? 'add-img-input' : 'edit-img-input').click();
+        return;
+      }
+      navigator.mediaDevices.getUserMedia({
+        video: { facingMode: { ideal: 'environment' }, width: { ideal: 1280 }, height: { ideal: 1280 } }
+      }).then(function(stream) {
+        _cameraStream = stream;
+        var video = document.getElementById('camera-video');
+        video.srcObject = stream;
+        video.play();
+        document.getElementById('modal-circular-camera').classList.remove('hidden');
+      }).catch(function() {
+        document.getElementById(target === 'add' ? 'add-img-input' : 'edit-img-input').click();
+      });
+    }
+
+    function closeCircularCamera() {
+      if (_cameraStream) { _cameraStream.getTracks().forEach(function(t){ t.stop(); }); _cameraStream = null; }
+      var video = document.getElementById('camera-video');
+      video.srcObject = null;
+      document.getElementById('modal-circular-camera').classList.add('hidden');
+    }
+
+    function captureCircularPhoto() {
+      var video = document.getElementById('camera-video');
+      var size = 320;
+      var canvas = document.createElement('canvas');
+      canvas.width = size; canvas.height = size;
+      var ctx = canvas.getContext('2d');
+      var vw = video.videoWidth, vh = video.videoHeight;
+      var side = Math.min(vw, vh);
+      var sx = (vw - side) / 2, sy = (vh - side) / 2;
+      ctx.beginPath();
+      ctx.arc(size / 2, size / 2, size / 2, 0, Math.PI * 2);
+      ctx.clip();
+      ctx.drawImage(video, sx, sy, side, side, 0, 0, size, size);
+      var dataUrl = canvas.toDataURL('image/jpeg', 0.82);
+      closeCircularCamera();
+      applyDiscPhoto(_cameraTarget, dataUrl);
+    }
+
+    function applyDiscPhoto(target, dataUrl) {
+      var prefix = target === 'add' ? 'add' : 'edit';
+      var dataField   = document.getElementById(prefix + '-img-data');
+      var preview     = document.getElementById(prefix + '-img-preview');
+      var placeholder = document.getElementById(prefix + '-img-placeholder');
+      var clearBtn    = document.getElementById(prefix + '-img-clear');
+      if (!dataField) return;
+      dataField.value = dataUrl;
+      dataField.setAttribute('data-cleared', 'false');
+      preview.src = dataUrl;
+      preview.classList.remove('hidden');
+      placeholder.classList.add('hidden');
+      if (clearBtn) clearBtn.classList.remove('hidden');
+    }
+
+    // Wire camera buttons after DOM is ready (modal HTML is injected below the script)
+    document.addEventListener('DOMContentLoaded', function() {
+      var shutterBtn = document.getElementById('camera-shutter-btn');
+      if (shutterBtn) shutterBtn.addEventListener('click', captureCircularPhoto);
+
+      var libraryInput = document.getElementById('camera-library-input');
+      if (libraryInput) libraryInput.addEventListener('change', function() {
+        var file = this.files[0]; if (!file) return;
+        closeCircularCamera();
+        compressDiscImage(file, function(compressed) { applyDiscPhoto(_cameraTarget, compressed); });
+        this.value = '';
+      });
+    });
+
+    renderAll();
+  </script>
+  <!-- In-app Circular Camera Modal -->
+  <div id="modal-circular-camera" class="hidden fixed inset-0 z-[300] flex flex-col items-center justify-between py-8 px-4">
+    <div class="text-white text-sm font-semibold tracking-wide opacity-70 pt-safe">Position your disc inside the circle</div>
+    <div class="camera-viewport rounded-none w-full max-w-sm mx-auto shadow-2xl">
+      <video id="camera-video" autoplay playsinline muted></video>
+      <div class="camera-circle-overlay"></div>
+      <div class="camera-circle-ring"></div>
+      <!-- Centre dot for aiming -->
+      <div style="position:absolute;inset:0;pointer-events:none;display:flex;align-items:center;justify-content:center;">
+        <div style="width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,0.5);box-shadow:0 0 4px rgba(0,0,0,0.5);"></div>
+      </div>
+    </div>
+    <div class="flex items-center justify-between w-full max-w-sm px-4">
+      <!-- Library fallback -->
+      <label class="flex flex-col items-center gap-1 cursor-pointer">
+        <div class="w-12 h-12 rounded-full bg-white bg-opacity-20 flex items-center justify-center">
+          <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+        </div>
+        <span class="text-white text-[0.65rem]">Library</span>
+        <input type="file" id="camera-library-input" accept="image/*" class="hidden" />
+      </label>
+      <!-- Shutter -->
+      <button id="camera-shutter-btn" class="shutter-btn" title="Capture disc photo"></button>
+      <!-- Cancel -->
+      <button onclick="closeCircularCamera()" class="flex flex-col items-center gap-1">
+        <div class="w-12 h-12 rounded-full bg-white bg-opacity-20 flex items-center justify-center">
+          <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </div>
+        <span class="text-white text-[0.65rem]">Cancel</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Disc Photo Popup Modal -->
+  <div id="modal-disc-photo" class="hidden fixed inset-0 z-[200] flex items-center justify-center p-4" style="background:rgba(0,0,0,0.85);" onclick="this.classList.add('hidden')">
+    <div class="relative max-w-sm w-full flex flex-col items-center" onclick="event.stopPropagation()">
+      <img id="disc-photo-popup-img" src="" alt="Disc photo" style="width:280px;height:280px;border-radius:50%;object-fit:cover;border:4px solid #c9a227;box-shadow:0 0 40px rgba(0,0,0,0.6);" />
+      <div id="disc-photo-popup-name" class="mt-4 text-white font-semibold text-lg text-center"></div>
+      <div id="disc-photo-popup-type" class="text-sm mt-1 text-center" style="color:#b7e4c7;"></div>
+      <button onclick="document.getElementById('modal-disc-photo').classList.add('hidden')" class="mt-5 px-6 py-2 bg-forest-700 text-white rounded-full text-sm font-semibold hover:bg-forest-600 transition-colors">Close</button>
+    </div>
+  </div>
+
+</body>
+</html>
