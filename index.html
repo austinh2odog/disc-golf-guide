@@ -126,8 +126,8 @@
 
     /* Disc image upload - circular */
     .disc-img-placeholder:hover { border-color:#a07d15; background:#f5e9b3; }
-    .disc-tile-img { width:52px; height:52px; object-fit:cover; border-radius:50%; border:2px solid #e5dcc8; flex-shrink:0; }
-    .disc-img-placeholder { width:52px; height:52px; border-radius:50%; border:2px dashed #d4c9ad; background:#f8f5ef; display:flex; align-items:center; justify-content:center; color:#aaa; font-size:1.4rem; cursor:pointer; flex-shrink:0; }
+    .disc-tile-img { width:65px; height:65px; object-fit:cover; border-radius:50%; border:2px solid #e5dcc8; flex-shrink:0; }
+    .disc-img-placeholder { width:65px; height:65px; border-radius:50%; border:2px dashed #d4c9ad; background:#f8f5ef; display:flex; align-items:center; justify-content:center; color:#aaa; font-size:1.4rem; cursor:pointer; flex-shrink:0; }
     .disc-img-preview { width:64px; height:64px; object-fit:cover; border-radius:50%; border:2px solid #e5dcc8; }
 
     /* ---- In-app circular camera ---- */
@@ -284,39 +284,50 @@
         <div data-id="50" class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
           <div data-id="51">
             <h2 data-id="52" class="text-lg md:text-xl font-bold text-ink-900">Wind Suitability Matrix</h2>
-            <p data-id="53" id="wind-matrix-subtitle" class="text-xs text-ink-500 mt-0.5">RHBH perspective · Select wind strength below</p>
+            <p data-id="53" id="wind-matrix-subtitle" class="text-sm text-ink-500 mt-0.5">Select wind strength</p>
           </div>
           <div data-id="55" class="flex bg-parchment-100 rounded-full p-1 gap-1" id="wind-toggle">
-            <button data-id="56" class="wind-toggle-btn active px-4 py-1.5 rounded-full text-xs font-semibold transition-all" data-strength="light">Light 5–10</button>
-            <button data-id="57" class="wind-toggle-btn px-4 py-1.5 rounded-full text-xs font-semibold transition-all text-ink-600" data-strength="moderate">Mod 10–15</button>
-            <button data-id="58" class="wind-toggle-btn px-4 py-1.5 rounded-full text-xs font-semibold transition-all text-ink-600" data-strength="strong">Strong 15+</button>
+            <button data-id="56" class="wind-toggle-btn active px-4 py-1.5 rounded-full text-sm font-semibold transition-all" data-strength="light">Light 5–10</button>
+            <button data-id="57" class="wind-toggle-btn px-4 py-1.5 rounded-full text-sm font-semibold transition-all text-ink-600" data-strength="moderate">Mod 10–15</button>
+            <button data-id="58" class="wind-toggle-btn px-4 py-1.5 rounded-full text-sm font-semibold transition-all text-ink-600" data-strength="strong">Strong 15+</button>
           </div>
         </div>
-        <div class="flex flex-wrap gap-3 mb-4 text-xs">
+                <h3 data-id="76" class="text-base font-bold text-ink-900 mt-8 mb-4 flex items-center gap-2">
+          <i data-id="77" data-lucide="zap" class="w-4 h-4 text-gold-400"></i> Wind Cheat Sheet
+        </h3>
+        <div data-id="78" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4" id="cheat-sheet"></div>
+
+        <div class="flex items-center gap-3 mt-6 mb-3">
+          <div class="flex-1 h-px bg-parchment-200"></div>
+          <h3 class="text-base font-bold text-ink-800 tracking-wide flex items-center gap-2">
+            <i data-lucide="list" class="w-4 h-4 text-forest-500"></i>
+            Disc-by-Disc Wind Analysis
+          </h3>
+          <div class="flex-1 h-px bg-parchment-200"></div>
+        </div>
+        <div class="flex flex-wrap gap-3 mb-4 text-sm">
           <span class="pill pill-excellent">✅ Excellent</span>
           <span class="pill pill-good">👍 Good</span>
           <span class="pill pill-fair">⚠️ Fair</span>
           <span class="pill pill-avoid">❌ Avoid</span>
         </div>
+        <p id="wind-disc-count" class="text-sm font-semibold text-ink-700 mb-3"></p>
         <div data-id="64" class="overflow-x-auto rounded-xl border border-parchment-200 bg-white">
-          <table data-id="65" class="matrix-table w-full text-xs" id="wind-matrix-table">
+          <table data-id="65" class="matrix-table w-full text-sm" id="wind-matrix-table">
             <thead>
               <tr>
-                <th class="text-left px-3 py-3 font-semibold text-xs min-w-[140px]">Disc</th>
-                <th class="text-center px-2 py-3 font-semibold text-xs">Head</th>
-                <th class="text-center px-2 py-3 font-semibold text-xs">Tail</th>
-                <th id="th-crossLR" class="text-center px-2 py-3 font-semibold text-xs"></th>
-                <th id="th-crossRL" class="text-center px-2 py-3 font-semibold text-xs"></th>
+                <th class="text-left px-3 py-3 font-semibold text-sm min-w-[140px]">Disc</th>
+                <th class="text-center px-2 py-3 font-semibold text-sm">Head</th>
+                <th class="text-center px-2 py-3 font-semibold text-sm">Tail</th>
+                <th id="th-crossLR" class="text-center px-2 py-3 font-semibold text-sm"></th>
+                <th id="th-crossRL" class="text-center px-2 py-3 font-semibold text-sm"></th>
 
               </tr>
             </thead>
             <tbody data-id="75" id="wind-matrix-body"></tbody>
           </table>
         </div>
-        <h3 data-id="76" class="text-base font-bold text-ink-900 mt-8 mb-4 flex items-center gap-2">
-          <i data-id="77" data-lucide="zap" class="w-4 h-4 text-gold-400"></i> Wind Cheat Sheet
-        </h3>
-        <div data-id="78" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4" id="cheat-sheet"></div>
+        
 
         
       </div>
@@ -1100,7 +1111,9 @@
         thCrossRL.innerHTML = 'R→L Cross';
       }
 
-      document.getElementById('wind-matrix-subtitle').textContent = throwMode + ' perspective · ' + bagDiscs.length + ' discs in bag · Select wind strength below';
+      document.getElementById('wind-matrix-subtitle').textContent = 'Select wind strength';
+      var windDiscCountEl = document.getElementById('wind-disc-count');
+      if (windDiscCountEl) windDiscCountEl.textContent = bagDiscs.length + ' discs in bag';
 
       var badgeEl = document.getElementById('wind-matrix-badge');
       if (isTurnRight()) {
@@ -1581,39 +1594,46 @@
         var tip = getThrowTip(d);
         var styleBadge = getStyleBadgeHtml(d);
         var plasticStr = d.plastic ? ' · ' + d.plastic : '';
-        var notesHtml = d.notes ? '<div class="bg-gold-100/50 rounded-lg p-2 border border-gold-200/50 mt-1"><p class="text-[0.65rem] text-ink-600">📝 ' + d.notes + '</p></div>' : '';
+        var notesHtml = d.notes ? '<div class="bg-gold-100/50 rounded-lg p-2 border border-gold-200/50 mt-1"><p class="text-sm text-ink-600">📝 ' + d.notes + '</p></div>' : '';
 
         var cardClass = 'disc-card' + (isInBag ? '' : ' out-of-bag');
         var notInBagBadge = isInBag ? '' : '<div class="not-in-bag-badge">NOT IN BAG</div>';
 
         var bagActionBtn = '';
         if (isInBag) {
-          bagActionBtn = '<button class="disc-remove-btn no-print text-ink-300 hover:text-amber-500 p-1 rounded transition-colors" data-disc-idx="' + idx + '" title="Remove from bag"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M8 6V4a2 2 0 0 1 4 0v2"/><line x1="9" y1="14" x2="15" y2="14" stroke-width="2.5"/></svg></button>';
+          bagActionBtn = '<button class="disc-remove-btn no-print text-ink-600 hover:text-amber-500 p-1 rounded transition-colors" data-disc-idx="' + idx + '" title="Remove from bag"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M8 6V4a2 2 0 0 1 4 0v2"/><line x1="9" y1="14" x2="15" y2="14" stroke-width="2.5"/></svg></button>';
         } else {
           bagActionBtn = '<button class="add-bag-circle no-print" data-disc-idx="' + idx + '">+</button>';
         }
-        var editBtn = '<button class="disc-edit-btn no-print text-ink-300 hover:text-blue-500 p-1 rounded transition-colors" data-disc-idx="' + idx + '" title="Edit disc"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>';
-        var deleteBtn = '<button class="disc-delete-btn no-print text-ink-300 hover:text-red-500 p-1 rounded transition-colors" data-disc-idx="' + idx + '" title="Delete permanently"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg></button>';
+        var editBtn = '<button class="disc-edit-btn no-print text-ink-600 hover:text-blue-500 p-1 rounded transition-colors" data-disc-idx="' + idx + '" title="Edit disc"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>';
+        var deleteBtn = '<button class="disc-delete-btn no-print text-ink-600 hover:text-red-500 p-1 rounded transition-colors" data-disc-idx="' + idx + '" title="Delete permanently"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg></button>';
         var plasticDisplay = d.plastic || '—';
 
         html += '<div class="' + cardClass + '" data-disc-idx="' + idx + '">' +
           notInBagBadge +
-          '<div class="p-4 pb-3 border-b border-parchment-100">' +
-            '<div class="flex items-start justify-between">' +
-              '<div class="flex items-center gap-2">' +
-              (d.photo ? '<img src="' + d.photo + '" alt="' + d.name + '" class="disc-tile-img disc-photo-popup-trigger cursor-pointer" data-photo="' + d.photo + '" data-name="' + d.name + '" data-disctype="' + d.type + '" title="Tap to view full image" />' : '<span class="text-2xl">' + d.icon + '</span>') +
-              '<div>' +
-                '<h3 class="font-bold text-base text-ink-900">' + getDiscDisplayName(d) + '</h3>' +
-                '<div class="mt-0.5"><span class="type-badge ' + badgeClass + '">' + d.type + '</span></div>' +
-                '<p class="text-[0.65rem] text-ink-500 mt-0.5">' + d.brand + ' · ' + plasticDisplay + '</p>' +
-              '</div></div>' +
-              '<div class="flex items-center gap-1">' +
-                styleBadge +
+
+          // ── CARD HEADER ──────────────────────────────────────────
+          '<div class="p-4 pb-3">' +
+            '<div class="flex items-start justify-between mb-2">' +
+              '<div class="flex items-center gap-2.5">' +
+                (d.photo ? '<img src="' + d.photo + '" alt="' + d.name + '" class="disc-tile-img disc-photo-popup-trigger cursor-pointer" data-photo="' + d.photo + '" data-name="' + d.name + '" data-disctype="' + d.type + '" title="Tap to view full image" />' : '<span class="text-3xl leading-none">' + d.icon + '</span>') +
+                '<div>' +
+                  '<h3 class="font-bold text-base leading-tight text-ink-900">' + getDiscDisplayName(d) + '</h3>' +
+                  '<div class="flex items-center gap-1.5 mt-0.5">' +
+                    '<span class="type-badge ' + badgeClass + '">' + d.type + '</span>' +
+                    styleBadge +
+                  '</div>' +
+                  '<p class="text-xs text-ink-600 mt-0.5">' + d.brand + ' · ' + plasticDisplay + (d.weight ? ' · ' + d.weight + 'g' : '') + '</p>' +
+                '</div>' +
+              '</div>' +
+              '<div class="flex items-center gap-0.5">' +
                 editBtn +
                 deleteBtn +
                 bagActionBtn +
               '</div>' +
             '</div>' +
+
+            // Remove / delete confirm dialogs
             (isInBag ? '<div class="remove-confirm hidden mt-2" id="remove-confirm-' + idx + '">' +
               '<p class="text-xs text-ink-700 mb-2">Remove <strong>' + getDiscDisplayNamePlain(d) + '</strong> from bag?</p>' +
               '<div class="flex gap-2"><button class="remove-yes-btn px-3 py-1 bg-amber-500 text-white rounded text-xs font-semibold" data-disc-idx="' + idx + '">Remove</button>' +
@@ -1624,24 +1644,61 @@
               '<div class="flex gap-2"><button class="delete-yes-btn px-3 py-1 bg-red-600 text-white rounded text-xs font-semibold" data-disc-idx="' + idx + '">Delete</button>' +
               '<button class="delete-cancel-btn px-3 py-1 bg-parchment-200 text-ink-700 rounded text-xs font-semibold" data-disc-idx="' + idx + '">Cancel</button></div>' +
             '</div>' +
-          '</div>' +
-          '<div class="p-4 space-y-3">' +
-            '<div><div class="flex items-center justify-between mb-1.5"><span class="text-[0.6rem] font-semibold text-ink-400 uppercase tracking-wider">Flight Numbers</span><span class="text-[0.6rem] font-semibold text-ink-500">Weight: ' + d.weight + 'g</span></div>' +
-              '<div class="flex gap-2">' +
-                '<div class="text-center"><div class="flight-box" style="background:#f59e0b">' + d.speed + '</div><div class="text-[0.55rem] text-ink-400 mt-0.5">Speed</div></div>' +
-                '<div class="text-center"><div class="flight-box" style="background:#3b82f6">' + d.glide + '</div><div class="text-[0.55rem] text-ink-400 mt-0.5">Glide</div></div>' +
-                '<div class="text-center"><div class="flight-box" style="background:#14b8a6">' + d.turn + '</div><div class="text-[0.55rem] text-ink-400 mt-0.5">Turn</div></div>' +
-                '<div class="text-center"><div class="flight-box" style="background:#ef4444">' + d.fade + '</div><div class="text-[0.55rem] text-ink-400 mt-0.5">Fade</div></div>' +
-              '</div></div>' +
-            '<div><div class="text-[0.6rem] font-semibold text-ink-400 uppercase tracking-wider mb-1.5">Stability: ' + getStabilityLabel(d.stability) + '</div>' +
+
+            // ── FLIGHT NUMBERS ──────────────────────────────────────
+            '<div class="bg-parchment-50 rounded-xl px-3 py-2 mb-3 border border-parchment-200">' +
+              '<div class="text-xs font-semibold text-ink-600 uppercase tracking-wider mb-1.5">Flight Numbers</div>' +
+              '<div class="flex items-center justify-around">' +
+                '<div class="text-center">' +
+                  '<div class="text-2xl font-bold text-amber-500 leading-none">' + d.speed + '</div>' +
+                  '<div class="text-xs font-semibold text-ink-700 mt-0.5 uppercase tracking-wide">Speed</div>' +
+                '</div>' +
+                '<div class="text-ink-200 text-lg font-light">|</div>' +
+                '<div class="text-center">' +
+                  '<div class="text-2xl font-bold text-blue-500 leading-none">' + d.glide + '</div>' +
+                  '<div class="text-xs font-semibold text-ink-700 mt-0.5 uppercase tracking-wide">Glide</div>' +
+                '</div>' +
+                '<div class="text-ink-200 text-lg font-light">|</div>' +
+                '<div class="text-center">' +
+                  '<div class="text-2xl font-bold text-teal-500 leading-none">' + d.turn + '</div>' +
+                  '<div class="text-xs font-semibold text-ink-700 mt-0.5 uppercase tracking-wide">Turn</div>' +
+                '</div>' +
+                '<div class="text-ink-200 text-lg font-light">|</div>' +
+                '<div class="text-center">' +
+                  '<div class="text-2xl font-bold text-red-500 leading-none">' + d.fade + '</div>' +
+                  '<div class="text-xs font-semibold text-ink-700 mt-0.5 uppercase tracking-wide">Fade</div>' +
+                '</div>' +
+              '</div>' +
+            '</div>' +
+
+            // ── STABILITY BAR ───────────────────────────────────────
+            '<div class="mb-3">' +
+              '<div class="flex items-center justify-between mb-1">' +
+                '<span class="text-xs font-semibold text-ink-600 uppercase tracking-wider">Stability</span>' +
+                '<span class="text-sm font-semibold text-ink-800">' + getStabilityLabel(d.stability) + '</span>' +
+              '</div>' +
               '<div class="stability-bar"><div class="stability-marker" style="left:' + stabPos + '%"></div></div>' +
-              '<div class="flex justify-between mt-1"><span class="text-[0.5rem] text-ink-300">Very US</span><span class="text-[0.5rem] text-ink-300">Very OS</span></div></div>' +
-            '<div><div class="text-[0.6rem] font-semibold text-ink-400 uppercase tracking-wider mb-1.5">Wind Performance (' + windLabel + ')</div>' + windMiniGrid(d) + '</div>' +
-            '<div><div class="text-[0.6rem] font-semibold text-ink-400 uppercase tracking-wider mb-1">Best For</div>' +
-              '<ul class="space-y-0.5">' + bestFor.map(function(b) { return '<li class="text-xs text-ink-700 flex items-start gap-1.5"><span class="text-forest-500 mt-0.5 flex-shrink-0">•</span> ' + b + '</li>'; }).join('') + '</ul></div>' +
-            '<div class="bg-parchment-50 rounded-lg p-2.5 border border-parchment-100">' +
-              '<div class="text-[0.6rem] font-semibold text-gold-600 uppercase tracking-wider mb-0.5 flex items-center gap-1"><i data-lucide="lightbulb" class="w-3 h-3"></i> ' + tipLabel + '</div>' +
-              '<p class="text-xs text-ink-700 italic">"' + tip + '"</p></div>' +
+              '<div class="flex justify-between mt-1"><span class="text-xs text-ink-500">Very US</span><span class="text-xs text-ink-500">Very OS</span></div>' +
+            '</div>' +
+
+            // ── WIND PERFORMANCE ────────────────────────────────────
+            '<div class="mb-3">' +
+              '<div class="text-xs font-semibold text-ink-600 uppercase tracking-wider mb-1.5">Wind Performance · ' + windLabel + '</div>' +
+              windMiniGrid(d) +
+            '</div>' +
+
+            // ── BEST FOR ────────────────────────────────────────────
+            '<div class="mb-3">' +
+              '<div class="text-xs font-semibold text-ink-600 uppercase tracking-wider mb-1">Best For</div>' +
+              '<ul class="space-y-0.5">' + bestFor.map(function(b) { return '<li class="text-sm text-ink-800 flex items-start gap-1.5"><span class="text-forest-500 flex-shrink-0">•</span>' + b + '</li>'; }).join('') + '</ul>' +
+            '</div>' +
+
+            // ── THROW TIP ───────────────────────────────────────────
+            '<div class="bg-gold-100/60 rounded-xl p-2.5 border border-gold-200/60">' +
+              '<div class="text-xs font-bold text-gold-600 uppercase tracking-wider mb-0.5 flex items-center gap-1"><i data-lucide="lightbulb" class="w-3 h-3"></i> ' + tipLabel + '</div>' +
+              '<p class="text-sm text-ink-900 italic leading-snug">"' + tip + '"</p>' +
+            '</div>' +
+
             notesHtml +
           '</div></div>';
       });
