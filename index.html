@@ -2615,13 +2615,15 @@
         document.body.appendChild(overlay);
         var handEl=document.getElementById('scShotHand'),typeEl=document.getElementById('scShotType'),lieEl=document.getElementById('scShotLie');
         handEl.value=prefs.hand||'Right';typeEl.value=(editIndex===null?'Backhand':(prefs.shotType||'Backhand'));
+        function normalizeOldLie(v){if(v==='Rough (Brush)'||v==='Rough (Tall Grass)')return 'Rough';if(v==='Rough (Trees)')return 'Trees';if(v==='Drop Zone')return 'Fairway';return v;}
         function lieOrder(t){
-          if(t==='Putt') return ['Basket','C1','C2','Fairway','Rough','Trees','Hazard','Water','OB','Lost Disc'];
-          return ['Fairway','C1','C2','Rough','Trees','Hazard','Water','OB','Lost Disc','Basket'];
+          return t==='Putt'
+            ? ['Basket','C1','C2','Fairway','Rough','Trees','Hazard','Water','OB','Lost Disc']
+            : ['Fairway','C1','C2','Rough','Trees','Hazard','Water','OB','Lost Disc','Basket'];
         }
-        function fillLies(selected){var list=lieOrder(typeEl.value);lieEl.innerHTML=list.map(function(v){return '<option>'+v+'</option>';}).join('');if(selected&&list.indexOf(selected)!==-1)lieEl.value=selected;else lieEl.value=list[0];}
+        function fillLies(selected){var list=lieOrder(typeEl.value),wanted=normalizeOldLie(selected||'');lieEl.innerHTML='';list.forEach(function(v){var o=document.createElement('option');o.value=v;o.textContent=v;lieEl.appendChild(o)});lieEl.value=(wanted&&list.indexOf(wanted)!==-1)?wanted:list[0];}
         fillLies();
-        typeEl.onchange=function(){fillLies();};
+        typeEl.addEventListener('change',function(){fillLies();});
         if(editIndex!==null){var old=h().shots[editIndex];document.getElementById('scShotDisc').value=old.disc;document.getElementById('scShotDist').value=old.distance||'';handEl.value=old.hand||prefs.hand||'Right';typeEl.value=old.shotType||prefs.shotType||'Backhand';fillLies(old.location);gpsStart=old.gpsStart||null;gpsEnd=old.gpsEnd||null;gpsDistance=old.gpsDistance||null;gpsAccuracy=old.gpsAccuracy||null}
         var gpsBox=document.getElementById('scGpsBox'),startBtn=document.getElementById('scGpsStart'),endBtn=document.getElementById('scGpsEnd'),resetBtn=document.getElementById('scGpsReset'),status=document.getElementById('scGpsStatus');
         if(!('geolocation' in navigator)){gpsBox.classList.add('sc-hide')}
