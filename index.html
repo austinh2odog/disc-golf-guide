@@ -159,6 +159,34 @@
     .performance-chevron{width:18px;height:18px;transition:transform .28s ease}.performance-toggle[aria-expanded="true"] .performance-chevron{transform:rotate(180deg)}
     .performance-panel{display:grid;grid-template-rows:0fr;opacity:0;margin-top:0;transition:grid-template-rows .32s ease,opacity .24s ease,margin-top .32s ease}.performance-panel.is-open{grid-template-rows:1fr;opacity:1;margin-top:10px}.performance-panel-inner{min-height:0;overflow:hidden}
     #disc-cards-grid{gap:.75rem}.disc-card>div.p-4{padding:.75rem}.disc-card .disc-tile-img{width:52px;height:52px}
+    /* Disc Card redesign */
+    .disc-card-main-row{display:grid;grid-template-columns:96px minmax(0,1fr);gap:12px;align-items:center;margin-bottom:12px}
+    .disc-card-main-row .disc-tile-img{width:92px!important;height:92px!important;border-width:3px}
+    .disc-card-photo-wrap{display:flex;align-items:center;justify-content:center;min-width:0}
+    .disc-card-photo-wrap .disc-photo-popup-trigger{cursor:pointer;touch-action:manipulation}
+    .flight-panel{background:#f8f5ef;border:1px solid #e5dcc8;border-radius:.9rem;padding:.65rem .75rem}
+    .flight-title{font-size:.75rem;font-weight:700;color:#555;text-transform:uppercase;letter-spacing:.06em;margin-bottom:.55rem}
+    .flight-values{display:grid;grid-template-columns:1fr auto 1fr auto 1fr auto 1fr;align-items:center}
+    .flight-divider{color:#1a1a1a;font-size:1.45rem;font-weight:300;line-height:1}
+    .flight-stat{text-align:center;min-width:0}
+    .flight-stat-value{font-size:2rem;font-weight:700;line-height:.95}
+    .flight-stat-label{font-size:.68rem;font-weight:700;color:#404040;text-transform:uppercase;letter-spacing:.04em;margin-top:.28rem}
+    .performance-toggle{font-size:.78rem}
+    .disc-history-shell{background:#0f2218;border-radius:1rem;max-width:480px;width:calc(100% - 2rem);max-height:92vh;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.35)}
+    .disc-history-hero{position:relative;background:#0f2218;color:#fff;padding:1.25rem 1.25rem 1rem;text-align:center}
+    .disc-history-hero img{width:170px;height:170px;border-radius:50%;object-fit:cover;border:4px solid #c9a227;box-shadow:0 8px 28px rgba(0,0,0,.4)}
+    .disc-history-close{position:absolute;right:.75rem;top:.65rem;width:36px;height:36px;border-radius:50%;border:1px solid rgba(255,255,255,.35);background:rgba(255,255,255,.12);color:#fff;font-size:1.4rem;line-height:1;display:flex;align-items:center;justify-content:center}
+    .disc-history-body{background:#fff;max-height:46vh;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:1rem}
+    .disc-history-heading{font-size:.78rem;font-weight:800;color:#404040;text-transform:uppercase;letter-spacing:.07em;margin-bottom:.65rem}
+    .disc-history-entry{border:1px solid #e5dcc8;border-radius:.75rem;padding:.75rem;margin-bottom:.65rem;background:#fff}
+    .disc-history-date{font-size:.78rem;font-weight:800;color:#1a3c2e}
+    .disc-history-course{font-size:.9rem;font-weight:700;color:#1a1a1a;margin-top:.15rem}
+    .disc-history-layout{font-size:.76rem;color:#6b6b6b;margin-top:.1rem}
+    .disc-history-grid{display:grid;grid-template-columns:1fr 1fr;gap:.45rem .75rem;margin-top:.6rem;padding-top:.55rem;border-top:1px solid #f0ead9}
+    .disc-history-label{display:block;font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:#888}
+    .disc-history-value{display:block;font-size:.78rem;font-weight:600;color:#404040;margin-top:.08rem}
+    .disc-history-empty{padding:1.1rem;text-align:center;color:#6b6b6b;font-size:.85rem}
+    @media(max-width:390px){.disc-card-main-row{grid-template-columns:82px minmax(0,1fr);gap:9px}.disc-card-main-row .disc-tile-img{width:78px!important;height:78px!important}.flight-panel{padding:.55rem .45rem}.flight-stat-value{font-size:1.65rem}.flight-stat-label{font-size:.6rem}.flight-divider{font-size:1.2rem}.disc-history-hero img{width:145px;height:145px}}
     @media (prefers-reduced-motion:reduce){.performance-panel,.performance-chevron{transition:none}}
     @media print {
       .no-print, nav, header, .tab-bar, footer, .throw-toggle-bar { display:none !important; }
@@ -280,7 +308,7 @@
     </div>
     <div class="mt-auto pt-6 border-t border-parchment-200 text-center">
       <div class="text-xs font-semibold text-forest-700">Disc Golf Guide</div>
-      <div class="text-[0.7rem] text-ink-400 mt-1">Version 1.0.8</div>
+      <div class="text-[0.7rem] text-ink-400 mt-1">Version 1.0.9</div>
     </div>
   </nav>
 
@@ -376,11 +404,11 @@
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
             </button>
             <!-- Import CSV -->
-            <button id="btn-import-csv" title="Import discs from CSV" class="toolbar-icon-btn bg-forest-700 text-white hover:bg-forest-600">
+            <button id="btn-import-csv" title="Import discs from CSV" class="hidden toolbar-icon-btn bg-forest-700 text-white hover:bg-forest-600">
               <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
             </button>
             <!-- Template -->
-            <button id="btn-download-csv-template" title="Download blank CSV template" class="toolbar-icon-btn bg-parchment-200 text-ink-600 hover:bg-parchment-300">
+            <button id="btn-download-csv-template" title="Download blank CSV template" class="hidden toolbar-icon-btn bg-parchment-200 text-ink-600 hover:bg-parchment-300">
               <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
             </button>
             <!-- Backup -->
@@ -1529,10 +1557,10 @@
       var labelsArr;
       var tooltips;
       if (isTurnRight()) {
-        labelsArr = ['Head','Tail','L→R','R→L'];
+        labelsArr = ['Headwind','Tailwind','L→R','R→L'];
         tooltips = ['Headwind','Tailwind','Cross L→R (aids turn →)','Cross R→L (fights turn →)'];
       } else {
-        labelsArr = ['Head','Tail','L→R','R→L'];
+        labelsArr = ['Headwind','Tailwind','L→R','R→L'];
         tooltips = ['Headwind','Tailwind','Cross L→R (fights turn ←)','Cross R→L (aids turn ←)'];
       }
       var icons = { excellent:'✅', good:'👍', fair:'⚠️', avoid:'❌' };
@@ -1583,12 +1611,15 @@
       }
 
       displayDiscs.sort(function(a, b) {
-        if (a.inbag && !b.inbag) return -1;
-        if (!a.inbag && b.inbag) return 1;
-        var aTypeIdx = typeOrder.indexOf(a.type);
-        var bTypeIdx = typeOrder.indexOf(b.type);
-        if (aTypeIdx !== bTypeIdx) return aTypeIdx - bTypeIdx;
-        return a._origIdx - b._origIdx;
+        var speedDiff = Number(b.speed || 0) - Number(a.speed || 0);
+        if (speedDiff) return speedDiff;
+        var glideDiff = Number(b.glide || 0) - Number(a.glide || 0);
+        if (glideDiff) return glideDiff;
+        var turnDiff = Number(b.turn || 0) - Number(a.turn || 0);
+        if (turnDiff) return turnDiff;
+        var fadeDiff = Number(b.fade || 0) - Number(a.fade || 0);
+        if (fadeDiff) return fadeDiff;
+        return String(a.name || '').localeCompare(String(b.name || ''), undefined, { sensitivity:'base' });
       });
 
       var html = '';
@@ -1624,22 +1655,13 @@
 
           // ── CARD HEADER ──────────────────────────────────────────
           '<div class="p-4 pb-3">' +
-            '<div class="flex items-start justify-between mb-2">' +
-              '<div class="flex items-center gap-2.5">' +
-                (d.photo ? '<img src="' + d.photo + '" alt="' + d.name + '" class="disc-tile-img disc-photo-popup-trigger cursor-pointer" data-photo="' + d.photo + '" data-name="' + d.name + '" data-disctype="' + d.type + '" title="Tap to view full image" />' : '<span class="text-3xl leading-none">' + d.icon + '</span>') +
-                '<div>' +
-                  '<h3 class="font-bold text-base leading-tight text-ink-900">' + getDiscDisplayName(d) + '</h3>' +
-                  '<div class="flex items-center gap-1.5 mt-0.5">' +
-                    '<span class="type-badge ' + badgeClass + '">' + d.type + '</span>' +
-                    styleBadge +
-                  '</div>' +
-                  '<p class="text-xs text-ink-600 mt-0.5">' + d.brand + ' · ' + plasticDisplay + (d.weight ? ' · ' + d.weight + 'g' : '') + '</p>' +
-                '</div>' +
+            '<div class="flex items-start justify-between mb-3">' +
+              '<div class="min-w-0 pr-2">' +
+                '<h3 class="font-bold text-xl leading-tight text-ink-900">' + getDiscDisplayName(d) + '</h3>' +
+                '<p class="text-sm text-ink-600 mt-0.5">' + d.brand + ' · ' + plasticDisplay + (d.weight ? ' · ' + d.weight + 'g' : '') + '</p>' +
               '</div>' +
-              '<div class="flex items-center gap-0.5">' +
-                editBtn +
-                deleteBtn +
-                bagActionBtn +
+              '<div class="flex items-center gap-0.5 flex-shrink-0">' +
+                editBtn + deleteBtn + bagActionBtn +
               '</div>' +
             '</div>' +
 
@@ -1656,27 +1678,20 @@
             '</div>' +
 
             // ── FLIGHT NUMBERS ──────────────────────────────────────
-            '<div class="bg-parchment-50 rounded-xl px-3 py-2 mb-3 border border-parchment-200">' +
-              '<div class="text-xs font-semibold text-ink-600 uppercase tracking-wider mb-1.5">Flight Numbers</div>' +
-              '<div class="flex items-center justify-around">' +
-                '<div class="text-center">' +
-                  '<div class="text-2xl font-bold text-amber-500 leading-none">' + d.speed + '</div>' +
-                  '<div class="text-xs font-semibold text-ink-700 mt-0.5 uppercase tracking-wide">Speed</div>' +
-                '</div>' +
-                '<div class="text-ink-200 text-lg font-light">|</div>' +
-                '<div class="text-center">' +
-                  '<div class="text-2xl font-bold text-blue-500 leading-none">' + d.glide + '</div>' +
-                  '<div class="text-xs font-semibold text-ink-700 mt-0.5 uppercase tracking-wide">Glide</div>' +
-                '</div>' +
-                '<div class="text-ink-200 text-lg font-light">|</div>' +
-                '<div class="text-center">' +
-                  '<div class="text-2xl font-bold text-teal-500 leading-none">' + d.turn + '</div>' +
-                  '<div class="text-xs font-semibold text-ink-700 mt-0.5 uppercase tracking-wide">Turn</div>' +
-                '</div>' +
-                '<div class="text-ink-200 text-lg font-light">|</div>' +
-                '<div class="text-center">' +
-                  '<div class="text-2xl font-bold text-red-500 leading-none">' + d.fade + '</div>' +
-                  '<div class="text-xs font-semibold text-ink-700 mt-0.5 uppercase tracking-wide">Fade</div>' +
+            '<div class="disc-card-main-row">' +
+              '<div class="disc-card-photo-wrap">' +
+                (d.photo ? '<img src="' + d.photo + '" alt="' + d.name + '" class="disc-tile-img disc-photo-popup-trigger" data-disc-idx="' + idx + '" title="View disc and throw history" />' : '<span class="text-5xl leading-none">' + d.icon + '</span>') +
+              '</div>' +
+              '<div class="flight-panel">' +
+                '<div class="flight-title">Flight Numbers</div>' +
+                '<div class="flight-values">' +
+                  '<div class="flight-stat"><div class="flight-stat-value text-amber-500">' + d.speed + '</div><div class="flight-stat-label">Speed</div></div>' +
+                  '<div class="flight-divider">|</div>' +
+                  '<div class="flight-stat"><div class="flight-stat-value text-blue-500">' + d.glide + '</div><div class="flight-stat-label">Glide</div></div>' +
+                  '<div class="flight-divider">|</div>' +
+                  '<div class="flight-stat"><div class="flight-stat-value text-teal-500">' + d.turn + '</div><div class="flight-stat-label">Turn</div></div>' +
+                  '<div class="flight-divider">|</div>' +
+                  '<div class="flight-stat"><div class="flight-stat-value text-red-500">' + d.fade + '</div><div class="flight-stat-label">Fade</div></div>' +
                 '</div>' +
               '</div>' +
             '</div>' +
@@ -1694,7 +1709,7 @@
             // ── PERFORMANCE DRAWER: WIND + BEST FOR + THROW TIP ──────
             '<div class="mb-3">' +
               '<button type="button" class="performance-toggle no-print" aria-expanded="false" aria-controls="performance-' + idx + '">' +
-                '<span>Performance</span><svg class="performance-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>' +
+                '<span>Disc Performance Details</span><svg class="performance-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>' +
               '</button>' +
               '<div id="performance-' + idx + '" class="performance-panel"><div class="performance-panel-inner">' +
                 '<div class="pt-1"><div class="text-xs font-semibold text-ink-600 uppercase tracking-wider mb-1.5">Wind Performance · ' + windLabel + '</div>' + windMiniGrid(d) + '</div>' +
@@ -1716,6 +1731,95 @@
       bindDiscCardEvents();
     }
 
+    function escapeDiscHistoryHtml(value) {
+      return String(value == null ? '' : value).replace(/[&<>"]/g, function(c) {
+        return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c] || c;
+      });
+    }
+    function getSavedRoundsForCurrentPlayer() {
+      var primaryKey = 'dg_score_rounds_' + currentPlayer;
+      var found = [];
+      try {
+        var primary = JSON.parse(localStorage.getItem(primaryKey) || '[]');
+        if (Array.isArray(primary)) found = found.concat(primary);
+      } catch(e) {}
+      if (!found.length) {
+        for (var i = 0; i < localStorage.length; i++) {
+          var key = localStorage.key(i) || '';
+          if (key === primaryKey) continue;
+          if (key.indexOf('dg_score_rounds') === 0 || key.indexOf('dg_scorecard_rounds') === 0 || key.indexOf('dg_rounds') === 0) {
+            try {
+              var candidate = JSON.parse(localStorage.getItem(key) || '[]');
+              if (Array.isArray(candidate)) found = found.concat(candidate);
+            } catch(e2) {}
+          }
+        }
+      }
+      var seen = {};
+      return found.filter(function(r) {
+        var sig = String(r.id || '') + '|' + String(r.date || '') + '|' + String(r.course || '') + '|' + String(r.layoutId || r.layout || '');
+        if (seen[sig]) return false;
+        seen[sig] = true;
+        return true;
+      });
+    }
+    function getDiscThrowHistory(disc) {
+      var exactName = getDiscDisplayNamePlain(disc);
+      var history = [];
+      getSavedRoundsForCurrentPlayer().forEach(function(round) {
+        (round.holes || []).forEach(function(hole) {
+          (hole.shots || []).forEach(function(shot, shotIndex) {
+            if (shot.disc === exactName || (shot.disc === disc.name && exactName === disc.name)) {
+              history.push({
+                date: round.date || '', course: round.course || '', layout: round.layout || '',
+                hand: shot.hand || '', shotType: shot.shotType || '', landing: shot.location || '',
+                distance: shot.distance, hole: hole.number || 0, shotIndex: shotIndex
+              });
+            }
+          });
+        });
+      });
+      history.sort(function(a,b) {
+        var dateDiff = String(b.date).localeCompare(String(a.date));
+        if (dateDiff) return dateDiff;
+        var holeDiff = Number(a.hole || 0) - Number(b.hole || 0);
+        if (holeDiff) return holeDiff;
+        return Number(a.shotIndex || 0) - Number(b.shotIndex || 0);
+      });
+      return history;
+    }
+    function openDiscHistoryPopup(idx) {
+      var d = discs[idx];
+      if (!d || !d.photo) return;
+      var history = getDiscThrowHistory(d);
+      var img = document.getElementById('disc-photo-popup-img');
+      var name = document.getElementById('disc-photo-popup-name');
+      var meta = document.getElementById('disc-photo-popup-type');
+      var body = document.getElementById('disc-photo-history-body');
+      img.src = d.photo;
+      name.textContent = getDiscDisplayNamePlain(d);
+      meta.textContent = d.brand + (d.plastic ? ' · ' + d.plastic : '') + (d.weight ? ' · ' + d.weight + 'g' : '');
+      if (!history.length) {
+        body.innerHTML = '<div class="disc-history-empty">No saved throw history for this disc yet.</div>';
+      } else {
+        body.innerHTML = '<div class="disc-history-heading">Throw History · ' + history.length + '</div>' + history.map(function(item) {
+          var shotText = [item.hand, item.shotType].filter(Boolean).join(' ');
+          return '<div class="disc-history-entry">' +
+            '<div class="disc-history-date">' + escapeDiscHistoryHtml(item.date || 'Date not recorded') + '</div>' +
+            '<div class="disc-history-course">' + escapeDiscHistoryHtml(item.course || 'Course not recorded') + '</div>' +
+            '<div class="disc-history-layout">' + escapeDiscHistoryHtml(item.layout || 'Layout not recorded') + '</div>' +
+            '<div class="disc-history-grid">' +
+              '<div><span class="disc-history-label">Shot</span><span class="disc-history-value">' + escapeDiscHistoryHtml(shotText || 'Not recorded') + '</span></div>' +
+              '<div><span class="disc-history-label">Landing</span><span class="disc-history-value">' + escapeDiscHistoryHtml(item.landing || 'Not recorded') + '</span></div>' +
+              '<div><span class="disc-history-label">Distance</span><span class="disc-history-value">' + (item.distance ? escapeDiscHistoryHtml(item.distance) + ' ft' : 'Not recorded') + '</span></div>' +
+            '</div></div>';
+        }).join('');
+      }
+      document.getElementById('modal-disc-photo').classList.remove('hidden');
+    }
+    function closeDiscHistoryPopup() {
+      document.getElementById('modal-disc-photo').classList.add('hidden');
+    }
     function bindDiscCardEvents() {
       document.querySelectorAll('.performance-toggle').forEach(function(btn) {
         btn.addEventListener('click', function(e) {
@@ -1726,14 +1830,11 @@
           panel.classList.toggle('is-open',opening);
         });
       });
-      // Disc photo popup — click circular photo to enlarge
+      // Disc photo popup — image always opens; saved throw history appears when available.
       document.querySelectorAll('.disc-photo-popup-trigger').forEach(function(img) {
         img.addEventListener('click', function(e) {
           e.stopPropagation();
-          document.getElementById('disc-photo-popup-img').src = this.getAttribute('data-photo');
-          document.getElementById('disc-photo-popup-name').textContent = this.getAttribute('data-name');
-          document.getElementById('disc-photo-popup-type').textContent = this.getAttribute('data-disctype');
-          document.getElementById('modal-disc-photo').classList.remove('hidden');
+          openDiscHistoryPopup(parseInt(this.getAttribute('data-disc-idx')));
         });
       });
 
@@ -2723,15 +2824,17 @@
     </div>
   </div>
 
-  <!-- Disc Photo Popup Modal -->
-  <div id="modal-disc-photo" class="hidden fixed inset-0 z-[200] flex items-center justify-center p-4" style="background:rgba(0,0,0,0.85);" onclick="this.classList.add('hidden')">
-    <div class="relative max-w-sm w-full flex flex-col items-center" onclick="event.stopPropagation()">
-      <img id="disc-photo-popup-img" src="" alt="Disc photo" style="width:280px;height:280px;border-radius:50%;object-fit:cover;border:4px solid #c9a227;box-shadow:0 0 40px rgba(0,0,0,0.6);" />
-      <div id="disc-photo-popup-name" class="mt-4 text-white font-semibold text-lg text-center"></div>
-      <div id="disc-photo-popup-type" class="text-sm mt-1 text-center" style="color:#b7e4c7;"></div>
-      <button onclick="document.getElementById('modal-disc-photo').classList.add('hidden')" class="mt-5 px-6 py-2 bg-forest-700 text-white rounded-full text-sm font-semibold hover:bg-forest-600 transition-colors">Close</button>
+  <!-- Disc Photo + Throw History Popup Modal -->
+  <div id="modal-disc-photo" class="hidden fixed inset-0 z-[200] flex items-center justify-center p-4" style="background:rgba(0,0,0,0.78);" onclick="closeDiscHistoryPopup()">
+    <div class="disc-history-shell" onclick="event.stopPropagation()">
+      <div class="disc-history-hero">
+        <button type="button" class="disc-history-close" onclick="closeDiscHistoryPopup()" aria-label="Close">×</button>
+        <img id="disc-photo-popup-img" src="" alt="Disc photo" />
+        <div id="disc-photo-popup-name" class="mt-3 text-white font-bold text-lg text-center"></div>
+        <div id="disc-photo-popup-type" class="text-sm mt-1 text-center" style="color:#b7e4c7;"></div>
+      </div>
+      <div id="disc-photo-history-body" class="disc-history-body"></div>
     </div>
   </div>
-
 </body>
 </html>
