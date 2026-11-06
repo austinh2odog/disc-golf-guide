@@ -154,6 +154,12 @@
     }
     .shutter-btn:active { transform: scale(0.92); background: #e0e0e0; }
 
+    /* Compact Disc Cards + animated Performance drawer */
+    .performance-toggle{width:100%;display:flex;align-items:center;justify-content:space-between;padding:9px 10px;border:1px solid #e5dcc8;border-radius:.65rem;background:#f8f5ef;color:#404040;cursor:pointer;font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em}
+    .performance-chevron{width:18px;height:18px;transition:transform .28s ease}.performance-toggle[aria-expanded="true"] .performance-chevron{transform:rotate(180deg)}
+    .performance-panel{display:grid;grid-template-rows:0fr;opacity:0;margin-top:0;transition:grid-template-rows .32s ease,opacity .24s ease,margin-top .32s ease}.performance-panel.is-open{grid-template-rows:1fr;opacity:1;margin-top:10px}.performance-panel-inner{min-height:0;overflow:hidden}
+    #disc-cards-grid{gap:.75rem}.disc-card>div.p-4{padding:.75rem}.disc-card .disc-tile-img{width:52px;height:52px}
+    @media (prefers-reduced-motion:reduce){.performance-panel,.performance-chevron{transition:none}}
     @media print {
       .no-print, nav, header, .tab-bar, footer, .throw-toggle-bar { display:none !important; }
       .tab-content { display:block !important; opacity:1 !important; }
@@ -1685,16 +1691,17 @@
               '<div class="flex justify-between mt-1"><span class="text-xs text-ink-500">Very US</span><span class="text-xs text-ink-500">Very OS</span></div>' +
             '</div>' +
 
-            // ── WIND PERFORMANCE ────────────────────────────────────
+            // ── PERFORMANCE DRAWER ──────────────────────────────────
             '<div class="mb-3">' +
-              '<div class="text-xs font-semibold text-ink-600 uppercase tracking-wider mb-1.5">Wind Performance · ' + windLabel + '</div>' +
-              windMiniGrid(d) +
-            '</div>' +
-
-            // ── BEST FOR ────────────────────────────────────────────
-            '<div class="mb-3">' +
-              '<div class="text-xs font-semibold text-ink-600 uppercase tracking-wider mb-1">Best For</div>' +
-              '<ul class="space-y-0.5">' + bestFor.map(function(b) { return '<li class="text-sm text-ink-800 flex items-start gap-1.5"><span class="text-forest-500 flex-shrink-0">•</span>' + b + '</li>'; }).join('') + '</ul>' +
+              '<button type="button" class="performance-toggle no-print" aria-expanded="false" aria-controls="performance-' + idx + '">' +
+                '<span>Performance</span><svg class="performance-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>' +
+              '</button>' +
+              '<div id="performance-' + idx + '" class="performance-panel"><div class="performance-panel-inner">' +
+                '<div class="pt-1"><div class="text-xs font-semibold text-ink-600 uppercase tracking-wider mb-1.5">Wind Performance · ' + windLabel + '</div>' + windMiniGrid(d) + '</div>' +
+                '<div class="mt-3 pb-1"><div class="text-xs font-semibold text-ink-600 uppercase tracking-wider mb-1">Best For</div>' +
+                  '<ul class="space-y-0.5">' + bestFor.map(function(b) { return '<li class="text-sm text-ink-800 flex items-start gap-1.5"><span class="text-forest-500 flex-shrink-0">•</span>' + b + '</li>'; }).join('') + '</ul>' +
+                '</div>' +
+              '</div></div>' +
             '</div>' +
 
             // ── THROW TIP ───────────────────────────────────────────
@@ -1712,6 +1719,15 @@
     }
 
     function bindDiscCardEvents() {
+      document.querySelectorAll('.performance-toggle').forEach(function(btn) {
+        btn.addEventListener('click', function(e) {
+          e.stopPropagation();
+          var panel=document.getElementById(this.getAttribute('aria-controls')); if(!panel)return;
+          var opening=this.getAttribute('aria-expanded')!=='true';
+          this.setAttribute('aria-expanded',opening?'true':'false');
+          panel.classList.toggle('is-open',opening);
+        });
+      });
       // Disc photo popup — click circular photo to enlarge
       document.querySelectorAll('.disc-photo-popup-trigger').forEach(function(img) {
         img.addEventListener('click', function(e) {
