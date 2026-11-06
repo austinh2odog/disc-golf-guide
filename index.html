@@ -280,7 +280,7 @@
     </div>
     <div class="mt-auto pt-6 border-t border-parchment-200 text-center">
       <div class="text-xs font-semibold text-forest-700">Disc Golf Guide</div>
-      <div class="text-[0.7rem] text-ink-400 mt-1">Version 1.0.6</div>
+      <div class="text-[0.7rem] text-ink-400 mt-1">Version 1.0.7</div>
     </div>
   </nav>
 
@@ -1691,23 +1691,21 @@
               '<div class="flex justify-between mt-1"><span class="text-xs text-ink-500">Very US</span><span class="text-xs text-ink-500">Very OS</span></div>' +
             '</div>' +
 
-            // ── PERFORMANCE DRAWER ──────────────────────────────────
+            // ── PERFORMANCE DRAWER: WIND + BEST FOR + THROW TIP ──────
             '<div class="mb-3">' +
               '<button type="button" class="performance-toggle no-print" aria-expanded="false" aria-controls="performance-' + idx + '">' +
                 '<span>Performance</span><svg class="performance-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>' +
               '</button>' +
               '<div id="performance-' + idx + '" class="performance-panel"><div class="performance-panel-inner">' +
                 '<div class="pt-1"><div class="text-xs font-semibold text-ink-600 uppercase tracking-wider mb-1.5">Wind Performance · ' + windLabel + '</div>' + windMiniGrid(d) + '</div>' +
-                '<div class="mt-3 pb-1"><div class="text-xs font-semibold text-ink-600 uppercase tracking-wider mb-1">Best For</div>' +
+                '<div class="mt-3"><div class="text-xs font-semibold text-ink-600 uppercase tracking-wider mb-1">Best For</div>' +
                   '<ul class="space-y-0.5">' + bestFor.map(function(b) { return '<li class="text-sm text-ink-800 flex items-start gap-1.5"><span class="text-forest-500 flex-shrink-0">•</span>' + b + '</li>'; }).join('') + '</ul>' +
                 '</div>' +
+                '<div class="bg-gold-100/60 rounded-xl p-2.5 border border-gold-200/60 mt-3 mb-1">' +
+                  '<div class="text-xs font-bold text-gold-600 uppercase tracking-wider mb-0.5 flex items-center gap-1"><i data-lucide="lightbulb" class="w-3 h-3"></i> ' + tipLabel + '</div>' +
+                  '<p class="text-sm text-ink-900 italic leading-snug">"' + tip + '"</p>' +
+                '</div>' +
               '</div></div>' +
-            '</div>' +
-
-            // ── THROW TIP ───────────────────────────────────────────
-            '<div class="bg-gold-100/60 rounded-xl p-2.5 border border-gold-200/60">' +
-              '<div class="text-xs font-bold text-gold-600 uppercase tracking-wider mb-0.5 flex items-center gap-1"><i data-lucide="lightbulb" class="w-3 h-3"></i> ' + tipLabel + '</div>' +
-              '<p class="text-sm text-ink-900 italic leading-snug">"' + tip + '"</p>' +
             '</div>' +
 
             notesHtml +
